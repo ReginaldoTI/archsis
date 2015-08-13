@@ -386,7 +386,7 @@ aur_package_install "gnome-encfs-manager" # libgee06 as dependency
 aur_package_install "dropbox"
 
 # turn off, more secure
-sed -i '/%wheel ALL=(ALL) NOPASSWD: ALL/s/^#//' ${MOUNT_POINT}/etc/sudoers
+sed -i '/%wheel ALL=(ALL) NOPASSWD: ALL/s/^/#/' ${MOUNT_POINT}/etc/sudoers
 
 rm -R /var/lib/pacman/sync
 pacman -Syu
