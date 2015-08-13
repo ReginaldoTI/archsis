@@ -25,18 +25,21 @@ LOCAL_TIME=true
 # "Australia" "Austria" "Belarus" "Belgium" "Brazil" "Bulgaria" "Canada" "Chile" "China" "Colombia" "Czech Republic" "Denmark" "Estonia" "Finland" "France" "Germany" "Greece" "Hungary" "India" "Ireland" "Israel" "Italy" "Japan" "Kazakhstan" "Korea" "Latvia" "Luxembourg" "Macedonia" "Netherlands" "New Caledonia" "New Zealand" "Norway" "Poland" "Portugal" "Romania" "Russian" "Serbia" "Singapore" "Slovakia" "South Africa" "Spain" "Sri Lanka" "Sweden" "Switzerland" "Taiwan" "Turkey" "Ukraine" "United Kingdom" "United States" "Uzbekistan" "Viet Nam")
 CONTRY_CODE="BR"
 
-AUTOMATIC_IP=false
-CONNECTION_NAME="unifemm" # for network manager name
-IP_ADDR="172.16.0.54"
-SUBMASK="255.255.240.0"
-CIDR="/20"
-GATEWAY="172.16.0.32"
-NAMESERVER="172.16.5.253"
-DNS_SEARCH="campusunifemm.edu.br"
-
 # load keymap keyboard
 KEYMAP="br-abnt2" #br-abnt or us or us-acentos
 X11KEYMAP="br" #br or us 
+
+# automatic ip, gatewy and dns
+AUTOMATIC_IP=false
+if [ $AUTOMATIC_IP==false ]; then
+	CONNECTION_NAME="unifemm" # for network manager name
+	IP_ADDR="172.16.0.54"
+	SUBMASK="255.255.240.0"
+	CIDR="/20"
+	GATEWAY="172.16.0.32"
+	NAMESERVER="172.16.5.253"
+	DNS_SEARCH="campusunifemm.edu.br"
+fi
 
 # for separated home directory
 SEPARATE_HOME=true
@@ -45,18 +48,19 @@ if [ $SEPARATE_HOME == true ]; then
 	HOME_ROOT_MOUNT_POINT="/dev/sdb1"
 	HOME_CRYPT_NAME="crypthome"
 	HOME_VG_CREATE_NAME="vghome"
+
+	# use keyfile
+	KEYFILE=true
+	KEYFILE_NAME="/root/home_key_file"
 fi
 
-# use keyfile
-KEYFILE=true
-KEYFILE_NAME="/root/home_key_file"
+## install
 
-# install
+# install virtualbox
 INSTALL_VIRTUALBOX=false
+
+# shared, install samba
 INSTALL_SAMBA=true
-
-# shared
-
 if [ $INSTALL_SAMBA==true ]; then
 	WORK_GROUP="CAMPUSUNIFEMM"
 	USERSHARES_DIR="/var/lib/samba/usershare"
