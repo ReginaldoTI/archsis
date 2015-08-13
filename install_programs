@@ -384,6 +384,7 @@ install_cups
 aur_package_install "libgee06"
 aur_package_install "gnome-encfs-manager" # libgee06 as dependency
 aur_package_install "dropbox"
+aur_package_install "sublime-text-dev"
 
 # turn off, more secure
 sed -i '/%wheel ALL=(ALL) NOPASSWD: ALL/s/^/#/' ${MOUNT_POINT}/etc/sudoers
