@@ -1,0 +1,65 @@
+#!/bin/bash
+
+# DO NOT USE - or _ in names
+
+# vars
+DEVICE="/dev/sda"
+MBR_MOUNT_POINT="/dev/sda"
+BOOT_MOUNT_POINT="/dev/sda1"
+ROOT_MOUNT_POINT="/dev/sda2"
+CRYPT_NAME="cryptsystem"
+VG_CREATE_NAME="vgsystem"
+HOST_NAME="arch"
+MOUNT_POINT="/mnt"
+USER_NAME="luis"
+USER_GROUP="users"
+USER_GROUP_EXTRA="wheel,storage,power,network"
+username=${USER_NAME}
+EDITOR="nano"
+LOCALE_UTF8="en_US.UTF-8" # pt_BR.UTF8
+LOCALE="en_US" # or pt_BR
+ARCHI=`uname -m` # ARCHITECTURE
+LOCAL_TIME=true
+
+# "AU" "AT" "BY" "BE" "BR" "BG" "CA" "CL" "CN" "CO" "CZ" "DK" "EE" "FI" "FR" "DE" "GR" "HU" "IN" "IE" "IL" "IT" "JP" "KZ" "KR" "LV" "LU" "MK" "NL" "NC" "NZ" "NO" "PL" "PT" "RO" "RU" "RS" "SG" "SK" "ZA" "ES" "LK" "SE" "CH" "TW" "TR" "UA" "GB" "US" "UZ" "VN")
+# "Australia" "Austria" "Belarus" "Belgium" "Brazil" "Bulgaria" "Canada" "Chile" "China" "Colombia" "Czech Republic" "Denmark" "Estonia" "Finland" "France" "Germany" "Greece" "Hungary" "India" "Ireland" "Israel" "Italy" "Japan" "Kazakhstan" "Korea" "Latvia" "Luxembourg" "Macedonia" "Netherlands" "New Caledonia" "New Zealand" "Norway" "Poland" "Portugal" "Romania" "Russian" "Serbia" "Singapore" "Slovakia" "South Africa" "Spain" "Sri Lanka" "Sweden" "Switzerland" "Taiwan" "Turkey" "Ukraine" "United Kingdom" "United States" "Uzbekistan" "Viet Nam")
+CONTRY_CODE="BR"
+
+AUTOMATIC_IP=false
+IP_ADDR="172.16.0.54"
+SUBMASK="255.255.240.0"
+GATEWAY="172.16.0.32"
+NAMESERVER="172.16.5.253"
+
+# load keymap keyboard
+KEYMAP="br-abnt2" #br-abnt or us or us-acentos
+X11KEYMAP="br" #br or us 
+
+# for separated home directory
+SEPARATE_HOME=true
+if [ $SEPARATE_HOME == true ]; then
+	HOME_DEVICE="/dev/sdb"
+	HOME_ROOT_MOUNT_POINT="/dev/sdb1"
+	HOME_CRYPT_NAME="crypthome"
+	HOME_VG_CREATE_NAME="vghome"
+fi
+
+# use keyfile
+KEYFILE=true
+KEYFILE_NAME="/root/home_key_file"
+
+# install
+INSTALL_VIRTUALBOX=false
+INSTALL_SAMBA=true
+
+# shared
+
+if [ $INSTALL_SAMBA==true ]; then
+	WORK_GROUP="CAMPUSUNIFEMM"
+	USERSHARES_DIR="/var/lib/samba/usershare"
+	USERSHARES_GROUP="sambashare"
+	PUBLIC_DIRECTORY="Public"
+	SHARED_DIRECTORY=/home/${USER_NAME}/${PUBLIC_DIRECTORY}
+	SHARED_NAME="shared"
+	SHARED_COMMENT="REIT-INF06"
+fi

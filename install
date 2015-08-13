@@ -1,0 +1,223 @@
+#!/bin/bash
+
+if [[ -f `pwd`/sharedfuncs ]]; then
+  source sharedfuncs
+else
+  echo "missing file: sharedfuncs"
+  exit 1
+fi
+
+# wired and wireless
+setup_connection
+check_connection
+
+# setup keymap
+export LANG=$LOCALE_UTF8
+loadkeys $KEYMAP
+pause_function
+
+# mirror
+configure_mirrorlist
+
+# multilib
+check_multilib
+
+# partition MBR!!! ... how work with gpt and grub???
+
+## create msdos disk
+parted -s $DEVICE mklabel msdos
+## /dev/sda1
+parted -s $DEVICE mkpart primary ext2 1M 256M
+partprobe $DEVICE ## tell kernel we have a new partition table
+## make partition active (bootable)
+parted -s $DEVICE set 1 boot on
+## /dev/sda2
+parted -s $DEVICE mkpart primary ext4 256M 100%
+partprobe $DEVICE ## tell kernel we have a new partition table
+
+# cfdisk $DEVICE
+
+if [ $SEPARATE_HOME == true ]; then
+	# cfdisk $HOME_DEVICE
+	parted -s $HOME_DEVICE mklabel msdos
+	parted -s $HOME_DEVICE mkpart primary ext4 1M 100%
+	partprobe $HOME_DEVICE
+fi
+
+# create encrypt partition
+cryptsetup -v --cipher aes-xts-plain64 --key-size 512 --hash sha512 --iter-time 5000 --use-random luksFormat $ROOT_MOUNT_POINT
+
+if [ $SEPARATE_HOME == true ]; then
+	cryptsetup -v --cipher aes-xts-plain64 --key-size 512 --hash sha512 --iter-time 5000 --use-random luksFormat $HOME_ROOT_MOUNT_POINT
+fi
+
+# open encrypt disk
+cryptsetup luksOpen $ROOT_MOUNT_POINT $CRYPT_NAME
+
+if [ $SEPARATE_HOME == true ]; then
+	cryptsetup luksOpen $HOME_ROOT_MOUNT_POINT $HOME_CRYPT_NAME
+fi
+
+# set key file to home
+if [ $SEPARATE_HOME == true ]; then
+	if [ $KEYFILE == true ]; then
+		echo "create ${KEYFILE_NAME}"
+		dd bs=512 count=4 if=/dev/urandom of=$KEYFILE_NAME iflag=fullblock
+		echo "set ${KEYFILE_NAME} to ${HOME_ROOT_MOUNT_POINT}"
+		cryptsetup luksAddKey $HOME_ROOT_MOUNT_POINT --key-file $KEYFILE_NAME
+	fi
+fi
+
+# create lvm
+if [ $SEPARATE_HOME != true ]; then
+	# system and home
+	pvcreate /dev/mapper/$CRYPT_NAME
+	vgcreate $VG_CREATE_NAME /dev/mapper/$CRYPT_NAME
+	lvcreate -L 25GB -n root $VG_CREATE_NAME
+	lvcreate -L 8GB -n swap $VG_CREATE_NAME
+  	lvcreate -l 100%FREE -n home $VG_CREATE_NAME
+else
+	# system
+	pvcreate /dev/mapper/$CRYPT_NAME
+	vgcreate $VG_CREATE_NAME /dev/mapper/$CRYPT_NAME
+	lvcreate -L 8GB -n swap $VG_CREATE_NAME
+  	lvcreate -l 100%FREE -n root $VG_CREATE_NAME
+
+  	# home
+	pvcreate /dev/mapper/$HOME_CRYPT_NAME
+	vgcreate $HOME_VG_CREATE_NAME /dev/mapper/$HOME_CRYPT_NAME
+	lvcreate -l 100%FREE -n home $HOME_VG_CREATE_NAME
+fi
+
+# names
+ROOT="${VG_CREATE_NAME}-root"
+SWAP="${VG_CREATE_NAME}-swap"
+
+if [ $SEPARATE_HOME == true ]; then
+	HOME="${HOME_VG_CREATE_NAME}-home"
+else
+	HOME="${VG_CREATE_NAME}-home"
+fi
+
+# formatting
+mkfs.ext4 /dev/mapper/$ROOT
+mkswap /dev/mapper/$SWAP
+mkfs.ext4 /dev/mapper/$HOME
+
+# formatting boot
+dd if=/dev/zero of=$BOOT_MOUNT_POINT bs=4096 count=1024 && sync # 1M
+mkfs.ext2 $BOOT_MOUNT_POINT
+
+# # mounting root
+mount /dev/mapper/$ROOT $MOUNT_POINT
+
+# install all necessary package
+pacstrap $MOUNT_POINT base base-devel dialog wpa_supplicant
+
+# mount boot, home and swap
+mount $BOOT_MOUNT_POINT $MOUNT_POINT/boot
+swapon /dev/mapper/$SWAP
+mount /dev/mapper/$HOME $MOUNT_POINT/home
+
+# generate fstab based on mounted devices
+genfstab -p $MOUNT_POINT >> $MOUNT_POINT/etc/fstab # not use -U for UUID
+
+# hostname
+echo "$HOST_NAME" > ${MOUNT_POINT}/etc/hostname
+arch_chroot "sed -i '/127.0.0.1/s/$/ '${HOST_NAME}'/' /etc/hosts"
+arch_chroot "sed -i '/::1/s/$/ '${HOST_NAME}'/' /etc/hosts"
+
+# localization
+arch_chroot "locale-gen en_US en_US.UTF-8 pt_BR pt_BR.UTF-8"
+#sed -i '/'${LOCALE}'/s/^#//' /etc/locale.gen
+sed -i '/en_US/s/^#//' ${MOUNT_POINT}/etc/locale.gen
+sed -i '/pt_BR/s/^#//' ${MOUNT_POINT}/etc/locale.gen
+arch_chroot locale-gen
+### arch_chroot "export 'LANG='$LOCALE_UTF8''"
+arch_chroot "export LANG='${LOCALE_UTF8}'"
+
+# timezone
+arch_chroot "ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime"
+if [ $LOCAL_TIME==true ]; then
+	arch_chroot "hwclock --systohc --localtime"
+else
+	arch_chroot "hwclock --systohc --utc"
+fi
+
+# install grub and prober
+arch_chroot "pacman -Syu grub grub-bios os-prober --noconfirm"
+
+# setup grub default
+sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet"/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash video=vesa:off"/' ${MOUNT_POINT}/etc/default/grub
+sed -i 's|GRUB_CMDLINE_LINUX=""|GRUB_CMDLINE_LINUX="cryptdevice='${ROOT_MOUNT_POINT}':'${VG_CREATE_NAME}'"|' ${MOUNT_POINT}/etc/default/grub
+sed -i "/#GRUB_DISABLE_LINUX_UUID=true/s/^#//" ${MOUNT_POINT}/etc/default/grub
+echo "GRUB_DISABLE_SUBMENU=y" >> ${MOUNT_POINT}/etc/default/grub
+
+# setup mkinitcpio
+sed -i '/^HOOK/s/block/block keymap encrypt lvm2/' ${MOUNT_POINT}/etc/mkinitcpio.conf
+sed -i '/^HOOK/s/filesystems/filesystems shutdown/' ${MOUNT_POINT}/etc/mkinitcpio.conf
+arch_chroot "pacman -S linux --noconfirm"
+arch_chroot "mkinitcpio -p linux"
+
+# install grub
+#arch_chroot "grub-install --target=i386-pc --recheck --debug ${MBR_MOUNT_POINT}"
+arch_chroot "grub-install --target=i386-pc --recheck '${MBR_MOUNT_POINT}'"
+arch_chroot "grub-mkconfig -o /boot/grub/grub.cfg"
+
+# change root password
+echo "root passwd"
+arch_chroot "passwd"
+
+# create user
+arch_chroot "useradd -m -g '${USER_GROUP}' -G '${USER_GROUP_EXTRA}' -s /bin/bash '${USER_NAME}'"
+echo "user passwd"
+arch_chroot "passwd '${USER_NAME}'"
+arch_chroot "cp /etc/skel/.bashrc /home/'${USER_NAME}'"
+
+# setup sudo user
+sed -i '/%wheel ALL=(ALL) ALL/s/^#//' ${MOUNT_POINT}/etc/sudoers
+sed -i '/%wheel ALL=(ALL) NOPASSWD: ALL/s/^#//' ${MOUNT_POINT}/etc/sudoers # needed for run script with user login
+
+# change for multilib
+# arch_chroot check_multilib
+
+# install xorg
+arch_chroot "pacman -S --noconfirm xorg-{xinit,utils,server,server-utils,xkill}"
+arch_chroot "pacman -S --noconfirm xf86-input-synaptics xf86-input-mouse xf86-input-keyboard xf86-input-wacom xf86-input-libinput"
+arch_chroot "pacman -S --noconfirm xorg-twm xorg-xclock xterm"
+arch_chroot "pacman -S --noconfirm mesa"
+# package_install "gamin"
+
+#ADD KEYMAP TO THE NEW SETUP
+# https://wiki.archlinux.org/index.php/Keyboard_configuration_in_Xorg
+# https://wiki.archlinux.org/index.php/Keyboard_configuration_in_Xorg#Using_X_configuration_files
+# https://wiki.archlinux.org/index.php/Locale
+echo "KEYMAP=${KEYMAP}" >> ${MOUNT_POINT}/etc/vconsole.conf
+echo "CONSOLEMAP=8859-1_to_uni" >> ${MOUNT_POINT}/etc/vconsole.conf
+localectl set-locale LANG=${LOCALE_UTF8}
+localectl set-keymap ${KEYMAP}
+localectl set-x11-keymap ${X11KEYMAP}
+
+# if home separated
+if [ $SEPARATE_HOME == true ]; then
+	# externaldrive         UUID=2f9a8428-ac69-478a-88a2-4aa458565431        none    luks,timeout=180
+	#_TMP=$(blkid | grep '${HOME_ROOT_MOUNT_POINT}' | awk -F '=' '{print $2;}')
+	#HOME_UUID=${_TMP:1:-1} # take off forst and last char
+	
+	HOME_UUID=$(blkid $HOME_ROOT_MOUNT_POINT -s UUID -o value)
+
+	if [ $KEYFILE == true ]; then
+		cp $KEYFILE_NAME $MOUNT_POINT$KEYFILE_NAME
+		echo "${HOME_VG_CREATE_NAME} UUID=${HOME_UUID} ${KEYFILE_NAME} luks,timeout=60" >> ${MOUNT_POINT}/etc/crypttab
+	else
+		echo "${HOME_VG_CREATE_NAME} UUID=${HOME_UUID} none luks,timeout=60" >> ${MOUNT_POINT}/etc/crypttab
+	fi
+	
+fi
+
+cp -R /root/luisantoniojr-* ${MOUNT_POINT}/home/${USER_NAME}
+chown -R ${USER_NAME}:${USER_GROUP} ${MOUNT_POINT}/home/${USER_NAME}/luisantoniojr-*
+
+umount /mnt/home
+umount /mnt/boot
+umount /mnt
