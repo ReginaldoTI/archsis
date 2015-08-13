@@ -124,6 +124,8 @@ genfstab -p $MOUNT_POINT >> $MOUNT_POINT/etc/fstab # not use -U for UUID
 
 # hostname
 echo "$HOST_NAME" > ${MOUNT_POINT}/etc/hostname
+
+# hosts file
 arch_chroot "sed -i '/127.0.0.1/s/$/ '${HOST_NAME}'/' /etc/hosts"
 arch_chroot "sed -i '/::1/s/$/ '${HOST_NAME}'/' /etc/hosts"
 

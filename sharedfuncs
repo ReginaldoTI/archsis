@@ -151,6 +151,7 @@ setup_connection() { #{{{
     ip route add default via ${GATEWAY}   
 
     echo "nameserver ${NAMESERVER}" >> /etc/resolv.conf
+    echo "search ${DNS_SEARCH}" >> /etc/resolv.conf
 
     # $EDITOR /etc/resolv.conf
   else
