@@ -26,10 +26,13 @@ LOCAL_TIME=true
 CONTRY_CODE="BR"
 
 AUTOMATIC_IP=false
+CONNECTION_NAME="unifemm" # for network manager name
 IP_ADDR="172.16.0.54"
 SUBMASK="255.255.240.0"
+CIDR="/20"
 GATEWAY="172.16.0.32"
 NAMESERVER="172.16.5.253"
+DNS_SEARCH="campusunifemm.edu.br"
 
 # load keymap keyboard
 KEYMAP="br-abnt2" #br-abnt or us or us-acentos
