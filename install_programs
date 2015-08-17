@@ -282,7 +282,7 @@ if [ $AUTOMATIC_IP==false ]; then
 
   echo "Setup networking manager on: ${CONNECTION_DEVICE}"
 
-  nmcli con add type ethernet con-name $CONNECTION_NAME ifname $CONNECTION_DEVICE ip4 $IP_ADDR/$CIDR gw4 $GATEWAY
+  nmcli con add type ethernet con-name $CONNECTION_NAME ifname $CONNECTION_DEVICE ip4 $IP_ADDR$CIDR gw4 $GATEWAY
   nmcli con mod $CONNECTION_NAME ipv4.dns $NAMESERVER # +ipv4.dns to add
   nmcli con mod $CONNECTION_NAME ipv4.dns-search $DNS_SEARCH
   nmcli con up $CONNECTION_NAME ifname $CONNECTION_DEVICE
