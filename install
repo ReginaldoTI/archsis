@@ -219,7 +219,7 @@ if [ $SEPARATE_HOME == true ]; then
 fi
 
 cp -R /root/luisantoniojr-* ${MOUNT_POINT}/home/${USER_NAME}
-chown -R ${USER_NAME}:${USER_GROUP} ${MOUNT_POINT}/home/${USER_NAME}/luisantoniojr-*
+arch_chroot "chown -R ${USER_NAME}:${USER_GROUP} /home/${USER_NAME}/luisantoniojr-*"
 
 umount /mnt/home
 umount /mnt/boot
