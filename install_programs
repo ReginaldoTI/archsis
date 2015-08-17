@@ -321,7 +321,10 @@ system_ctl enable rpcbind
 system_ctl enable nfs-client.target
 system_ctl enable remote-fs.target
 
-# acpi?
+# Advanced Configuration and Power Interface (ACPI)
+echo "ACPID https://wiki.archlinux.org/index.php/Acpid"
+package_install "acpi acpid"
+system_ctl enable acpid
 
 # tools
 package_install "mc curl lynx wget terminator rsync rdesktop gparted htop encfs"
