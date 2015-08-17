@@ -270,8 +270,9 @@ system_ctl enable gdm
 
 # Network Management and daemon
 package_install "networkmanager dnsmasq network-manager-applet networkmanager-openconnect networkmanager-openvpn networkmanager-pptp networkmanager-vpnc"
-#"ntp" && package_install "networkmanager-dispatcher-ntpd"
+is_package_installed "ntp" && package_install "networkmanager-dispatcher-ntpd"
 system_ctl enable NetworkManager
+system_ctl start NetworkManager
 
 # create setup for network manager with nmcli
 # https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Networking_Guide/sec-Using_the_NetworkManager_Command_Line_Tool_nmcli.html
@@ -293,8 +294,8 @@ echo "BASH TOOLS - https://wiki.archlinux.org/index.php/Bash"
 package_install "bc rsync mlocate bash-completion pkgstats"
 
 echo "NTPd - https://wiki.archlinux.org/index.php/NTPd"
-install "ntp"
-is_installed "ntp" && ntpd -u ntp:ntp
+package_install "ntp"
+is_package_installed "ntp" && ntpd -u ntp:ntp
   
 echo "(UN)COMPRESS TOOLS - https://wiki.archlinux.org/index.php/P7zip"
 package_install "zip unzip unrar p7zip"
