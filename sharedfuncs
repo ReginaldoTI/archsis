@@ -137,17 +137,14 @@ fi
 
 setup_connection() { #{{{
 
-  WIRED_DEV=`ip link | grep "eno\|enp" | awk '{print $2}'| sed 's/://' | sed '1!d'`
-  WIRELESS_DEV=`ip link | grep wlp | awk '{print $2}'| sed 's/://' | sed '1!d'`
-
   echo "wired:" $WIRED_DEV
   echo "wireless:" $WIRELESS_DEV
 
   if [ $AUTOMATIC_IP != true ]; then
-    systemctl stop dhcpcd@${WIRED_DEV}.service
-    ip link set ${WIRED_DEV} down
-    ip link set ${WIRED_DEV} up
-    ip addr add ${IP_ADDR}/${SUBMASK} dev ${WIRED_DEV}
+    systemctl stop dhcpcd@${CONNECTION_DEVICE}.service
+    ip link set ${CONNECTION_DEVICE} down
+    ip link set ${CONNECTION_DEVICE} up
+    ip addr add ${IP_ADDR}/${SUBMASK} dev ${CONNECTION_DEVICE}
     ip route add default via ${GATEWAY}   
 
     echo "nameserver ${NAMESERVER}" >> /etc/resolv.conf
@@ -157,7 +154,7 @@ setup_connection() { #{{{
 
     # $EDITOR /etc/resolv.conf
   else
-    systemctl start dhcpcd@${WIRED_DEV}.service
+    systemctl start dhcpcd@${CONNECTION_DEVICE}.service
     # setup_alt_dns
   fi
   pause_function

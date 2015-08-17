@@ -9,7 +9,7 @@ BOOT_MOUNT_POINT="/dev/sda1"
 ROOT_MOUNT_POINT="/dev/sda2"
 CRYPT_NAME="cryptsystem"
 VG_CREATE_NAME="vgsystem"
-HOST_NAME="archTest"
+HOST_NAME="REIT-INF06-LINUX"
 MOUNT_POINT="/mnt"
 USER_NAME="luis"
 USER_GROUP="users"
@@ -21,6 +21,9 @@ LOCALE="en_US" # or pt_BR
 ARCHI=`uname -m` # ARCHITECTURE
 LOCAL_TIME=true
 
+WIRED_DEV=`ip link | grep "eno\|enp" | awk '{print $2}'| sed 's/://' | sed '1!d'`
+WIRELESS_DEV=`ip link | grep wlp | awk '{print $2}'| sed 's/://' | sed '1!d'` 
+
 # "AU" "AT" "BY" "BE" "BR" "BG" "CA" "CL" "CN" "CO" "CZ" "DK" "EE" "FI" "FR" "DE" "GR" "HU" "IN" "IE" "IL" "IT" "JP" "KZ" "KR" "LV" "LU" "MK" "NL" "NC" "NZ" "NO" "PL" "PT" "RO" "RU" "RS" "SG" "SK" "ZA" "ES" "LK" "SE" "CH" "TW" "TR" "UA" "GB" "US" "UZ" "VN")
 # "Australia" "Austria" "Belarus" "Belgium" "Brazil" "Bulgaria" "Canada" "Chile" "China" "Colombia" "Czech Republic" "Denmark" "Estonia" "Finland" "France" "Germany" "Greece" "Hungary" "India" "Ireland" "Israel" "Italy" "Japan" "Kazakhstan" "Korea" "Latvia" "Luxembourg" "Macedonia" "Netherlands" "New Caledonia" "New Zealand" "Norway" "Poland" "Portugal" "Romania" "Russian" "Serbia" "Singapore" "Slovakia" "South Africa" "Spain" "Sri Lanka" "Sweden" "Switzerland" "Taiwan" "Turkey" "Ukraine" "United Kingdom" "United States" "Uzbekistan" "Viet Nam")
 CONTRY_CODE="BR"
@@ -30,10 +33,21 @@ KEYMAP="br-abnt2" #br-abnt or us or us-acentos
 X11KEYMAP="br" #br or us 
 
 # automatic ip, gatewy and dns
+WIRED=true
+WIRELESS=false
 AUTOMATIC_IP=false
+
+if [ $WIRED==true ]; then
+	CONNECTION_DEVICE=$WIRED_DEV
+else
+	if [ $WIRELESS==true ]; then
+		CONNECTION_DEVICE=$WIRELESS_DEV
+	fi
+fi
+
 if [ $AUTOMATIC_IP==false ]; then
 	CONNECTION_NAME="unifemm" # for network manager name
-	IP_ADDR="172.16.0.54"
+	IP_ADDR="172.16.0.152" # 54
 	SUBMASK="255.255.240.0"
 	CIDR="/20"
 	GATEWAY="172.16.0.32"
@@ -43,7 +57,7 @@ fi
 
 # for separated home directory
 SEPARATE_HOME=true
-if [ $SEPARATE_HOME == true ]; then
+if [ $SEPARATE_HOME==true ]; then
 	HOME_DEVICE="/dev/sdb"
 	HOME_ROOT_MOUNT_POINT="/dev/sdb1"
 	HOME_CRYPT_NAME="crypthome"
@@ -58,6 +72,9 @@ fi
 
 # install virtualbox
 INSTALL_VIRTUALBOX=false
+
+# install cups
+INSTALL_CUPS=true
 
 # shared, install samba
 INSTALL_SAMBA=true

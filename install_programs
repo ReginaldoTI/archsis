@@ -259,23 +259,19 @@ system_ctl enable NetworkManager
 # https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Networking_Guide/sec-Using_the_NetworkManager_Command_Line_Tool_nmcli.html
 # https://fedoraproject.org/wiki/Networking/CLI
 # http://cgit.freedesktop.org/NetworkManager/NetworkManager/plain/man/nmcli-examples.xml
-if ! AUTOMATIC_IP ; then
-
-  WIRED_DEV=`ip link | grep "eno\|enp" | awk '{print $2}'| sed 's/://' | sed '1!d'`
-#  WIRELESS_DEV=`ip link | grep wlp | awk '{print $2}'| sed 's/://' | sed '1!d'` 
-
-  nmcli con add type ethernet con-name $CONNECTION_NAME ifname $WIRED_DEV ip4 $IP_ADDR/$CIDR gw4 $GATEWAY
+if [ ! AUTOMATIC_IP ]; then
+  nmcli con add type ethernet con-name $CONNECTION_NAME ifname $CONNECTION_DEVICE ip4 $IP_ADDR/$CIDR gw4 $GATEWAY
   nmcli con mod $CONNECTION_NAME ipv4.dns $NAMESERVER # +ipv4.dns to add
   nmcli con mod $CONNECTION_NAME ipv4.dns-search $DNS_SEARCH
-  nmcli con up $CONNECTION_NAME ifname $WIRED_DEV
+  nmcli con up $CONNECTION_NAME ifname $CONNECTION_DEVICE
 fi
 
 echo "BASH TOOLS - https://wiki.archlinux.org/index.php/Bash"
 package_install "bc rsync mlocate bash-completion pkgstats"
 
-#echo "NTPd - https://wiki.archlinux.org/index.php/NTPd"
-#install "ntp"
-#is_installed "ntp" && ntpd -u ntp:ntp
+echo "NTPd - https://wiki.archlinux.org/index.php/NTPd"
+install "ntp"
+is_installed "ntp" && ntpd -u ntp:ntp
   
 echo "(UN)COMPRESS TOOLS - https://wiki.archlinux.org/index.php/P7zip"
 package_install "zip unzip unrar p7zip"
@@ -393,7 +389,9 @@ if [ $INSTALL_SAMBA==true ]; then
   install_samba
 fi
 
-install_cups
+if [ $INSTALL_CUPS ==true ] then
+  install_cups
+fi
 
 # aur
 aur_package_install "libgee06"
