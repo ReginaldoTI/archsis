@@ -190,14 +190,32 @@ install_samba(){
       groupadd ${USERSHARES_GROUP}
       chown root:${USERSHARES_GROUP} ${USERSHARES_DIR}
       chmod 1770 ${USERSHARES_DIR}
+
+      # delete desnecessary lines
+
+      sed -i "/[homes]/d" /etc/samba/smb.conf
+      sed -i "/comment = Home Directories/d" /etc/samba/smb.conf
+      sed -i "/browseable = no/d" /etc/samba/smb.conf
+      sed -i "/writable = yes/d" /etc/samba/smb.conf
+
+      sed -i "/[printers]/d" /etc/samba/smb.conf
+      sed -i "/comment = All Printers/d" /etc/samba/smb.conf
+      sed -i "/path = /var/spool/samba/d" /etc/samba/smb.conf
+      sed -i "/browseable = no/d" /etc/samba/smb.conf
+      sed -i "/guest ok = no/d" /etc/samba/smb.conf
+      sed -i "/writable = no/d" /etc/samba/smb.conf
+      sed -i "/printable = yes/d" /etc/samba/smb.conf
+
       sed -i 's|workgroup = MYGROUP|workgroup = '${WORK_GROUP}'\n|' /etc/samba/smb.conf
       sed -i -e '/\[global\]/a\\n   usershare path = /var/lib/samba/usershare\n   usershare max shares = 100\n   usershare allow guests = yes\n   usershare owner only = False' /etc/samba/smb.conf
       sed -i -e '/\[global\]/a\\n   socket options = IPTOS_LOWDELAY TCP_NODELAY SO_KEEPALIVE\n   write cache size = 2097152\n   use sendfile = yes\n' /etc/samba/smb.conf
-      sed -i -e "\$a\[${SHARED_NAME}\]\n  comment = ${SHARED_COMMENT}\n  path = ${SHARED_DIRECTORY}\n  writeable = yes\n  browseable = yes\n  guest ok = yes\n" /etc/samba/smb.conf
+      sed -i -e "\$a\[${SHARED_NAME}\]\n  comment = ${SHARED_COMMENT}\n  path = ${USERSHARES_DIR}\n  writeable = yes\n  browseable = yes\n  guest ok = yes\n" /etc/samba/smb.conf
+
       # echo '['${SHARED_NAME}']\n comment = '${SHARED_COMMENT}'\n path = '${SHARED_DIRECTORY}'\n writeable = yes\n browseable = yes\n guest ok = yes\n' >>  /etc/samba/smb.conf
       usermod -a -G ${USERSHARES_GROUP} ${username}
       sed -i '/user_allow_other/s/^#//' /etc/fuse.conf
       modprobe fuse
+
     fi
     echo "Enter your new samba account password:"
     pdbedit -a -u ${username}
@@ -260,10 +278,15 @@ system_ctl enable NetworkManager
 # https://fedoraproject.org/wiki/Networking/CLI
 # http://cgit.freedesktop.org/NetworkManager/NetworkManager/plain/man/nmcli-examples.xml
 if [ $AUTOMATIC_IP==false ]; then
+
+  echo "Setup networking manager on: ${CONNECTION_DEVICE}"
+
   nmcli con add type ethernet con-name $CONNECTION_NAME ifname $CONNECTION_DEVICE ip4 $IP_ADDR/$CIDR gw4 $GATEWAY
   nmcli con mod $CONNECTION_NAME ipv4.dns $NAMESERVER # +ipv4.dns to add
   nmcli con mod $CONNECTION_NAME ipv4.dns-search $DNS_SEARCH
   nmcli con up $CONNECTION_NAME ifname $CONNECTION_DEVICE
+
+  pause_function
 fi
 
 echo "BASH TOOLS - https://wiki.archlinux.org/index.php/Bash"

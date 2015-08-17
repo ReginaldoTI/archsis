@@ -62,9 +62,10 @@ fi
 if [ $SEPARATE_HOME == true ]; then
 	if [ $KEYFILE == true ]; then
 		echo "create ${KEYFILE_NAME}"
-		dd bs=512 count=4 if=/dev/urandom of=$KEYFILE_NAME iflag=fullblock
+		dd bs=1024 count=4 if=/dev/urandom of=$KEYFILE_NAME iflag=fullblock
+		chmod 0400 $KEYFILE_NAME # only root cab read
 		echo "set ${KEYFILE_NAME} to ${HOME_ROOT_MOUNT_POINT}"
-		cryptsetup luksAddKey $HOME_ROOT_MOUNT_POINT --key-file $KEYFILE_NAME
+		cryptsetup luksAddKey $HOME_ROOT_MOUNT_POINT $KEYFILE_NAME
 	fi
 fi
 
