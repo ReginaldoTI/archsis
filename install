@@ -130,6 +130,12 @@ echo "$HOST_NAME" > ${MOUNT_POINT}/etc/hostname
 arch_chroot "sed -i '/127.0.0.1/s/$/ '${HOST_NAME}'/' /etc/hosts"
 arch_chroot "sed -i '/::1/s/$/ '${HOST_NAME}'/' /etc/hosts"
 
+if [ $INSTALL_SAMBA==true ]; then
+	if [ AUTHENTICATE_ON_SERVER==true ]; then
+		arch_chroot "sed -i -e '\$a'${DNS_IP}' '${NETBIOS_NAME}'.'${DNS_NAME}' '${NETBIOS_NAME}'' /etc/hosts"
+	fi
+fi
+
 # localization
 arch_chroot "locale-gen en_US en_US.UTF-8 pt_BR pt_BR.UTF-8"
 #sed -i '/'${LOCALE}'/s/^#//' /etc/locale.gen
