@@ -168,7 +168,7 @@ install_virtualbox(){
     modprobe vboxdrv vboxnetflt vboxnetadp
   else
     cecho " ${BBlue}[${Reset}${Bold}!${BBlue}]${Reset} VirtualBox was not installed as we are a VirtualBox guest."
-  fi  
+  fi
 }
 
 ## https://wiki.samba.org/index.php/Samba_&_Active_Directory#Setting_Up_Kerberos
@@ -225,7 +225,7 @@ install_samba(){
         sed -i 's/passwd:.*/& winbind/' /etc/nsswitch.conf
         sed -i 's/group:.*/& winbind/' /etc/nsswitch.conf
       fi
-      
+
       # share settings
       sed -i -e "\$a\[${SHARED_NAME}\]\n  comment = ${SHARED_COMMENT}\n  path = ${USERSHARES_DIR}\n  writeable = yes\n  browseable = yes\n  guest ok = yes\n" /etc/samba/smb.conf
 
@@ -317,26 +317,26 @@ package_install "bc rsync mlocate bash-completion pkgstats"
 echo "NTPd - https://wiki.archlinux.org/index.php/NTPd"
 package_install "ntp"
 is_package_installed "ntp" && ntpd -u ntp:ntp
-  
+
 echo "(UN)COMPRESS TOOLS - https://wiki.archlinux.org/index.php/P7zip"
 package_install "zip unzip unrar p7zip"
 
 echo "AVAHI - https://wiki.archlinux.org/index.php/Avahi"
 package_install "avahi nss-mdns"
 system_ctl enable avahi-daemon
-  
+
 echo "ALSA - https://wiki.archlinux.org/index.php/Alsa"
 package_install "alsa-utils alsa-plugins"
 package_install "lib32-alsa-plugins"
-  
+
 echo "PULSEAUDIO - https://wiki.archlinux.org/index.php/Pulseaudio"
 package_install "pulseaudio pulseaudio-alsa pavucontrol"
 package_install "lib32-libpulse"
-  
+
 echo "NTFS/FAT/exFAT - https://wiki.archlinux.org/index.php/File_Systems"
 package_install "ntfs-3g dosfstools exfat-utils fuse fuse-exfat autofs"
 is_package_installed "fuse" && add_module "fuse"
-  
+
 echo "NFS - https://wiki.archlinux.org/index.php/Nfs"
 package_install  "nfs-utils"
 system_ctl enable rpcbind
@@ -446,6 +446,7 @@ aur_package_install "libgee06"
 aur_package_install "gnome-encfs-manager" # libgee06 as dependency
 aur_package_install "dropbox"
 aur_package_install "sublime-text-dev"
+aur_package_install "atom-editor"
 
 # turn off, more secure
 sed -i '/%wheel ALL=(ALL) NOPASSWD: ALL/s/^/#/' ${MOUNT_POINT}/etc/sudoers

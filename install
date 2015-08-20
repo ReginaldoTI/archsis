@@ -25,7 +25,7 @@ configure_mirrorlist
 check_multilib
 
 # try to see free space on already used disk
-# block_list=(`lsblk | grep 'part' | awk '{print "/dev/" substr($1,3) "" substr($4,0)}'`)
+# block_list=(`lsblk | grep 'part' | awk '{print "/dev/" substr($1,3) " " substr($4,0)}'`)
 # sfdisk -l ;dev;sda ... start end
 
 # partition MBR!!! ... how work with gpt/efi
@@ -41,7 +41,7 @@ if [[ $UEFI -eq 0 ]]; then
 	parted -s $DEVICE mkpart primary ext4 256M 100%
 	partprobe $DEVICE ## tell kernel we have a new partition table
 else
-	
+
 fi
 
 
@@ -224,7 +224,7 @@ if [ $SEPARATE_HOME == true ]; then
 	# externaldrive         UUID=2f9a8428-ac69-478a-88a2-4aa458565431        none    luks,timeout=180
 	#_TMP=$(blkid | grep '${HOME_ROOT_MOUNT_POINT}' | awk -F '=' '{print $2;}')
 	#HOME_UUID=${_TMP:1:-1} # take off forst and last char
-	
+
 	HOME_UUID=$(blkid $HOME_ROOT_MOUNT_POINT -s UUID -o value)
 
 	if [ $KEYFILE == true ]; then
@@ -233,7 +233,7 @@ if [ $SEPARATE_HOME == true ]; then
 	else
 		echo "${HOME_VG_CREATE_NAME} UUID=${HOME_UUID} none luks,timeout=60" >> ${MOUNT_POINT}/etc/crypttab
 	fi
-	
+
 fi
 
 cp -R /root/luisantoniojr-* ${MOUNT_POINT}/home/${USER_NAME}
