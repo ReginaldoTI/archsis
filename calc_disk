@@ -1,0 +1,26 @@
+#!/bin/bash
+
+PARTITION_TYPE=$(parted $1 print | grep "Partition Table" | awk '{print $3;}')
+PARTITION_SIZE=$(parted $1 print | grep "Disk $1" | awk '{print $3;}')
+PARTINION_N=$(parted $1 print | sed -n -e 7,15p)
+
+echo $PARTITION_TYPE
+echo $PARTITION_SIZE
+echo $PARTINION_N
+
+for i in "${PARTINION_N[@]}"; do
+  echo $i
+done
+
+# while true do
+# done
+
+# select V1 in "${PARTINION_N[@]}"; do
+#   echo $V2
+# done
+
+# if [ $PARTITION_TYPE -eq "msdos" ] then
+# else # gpt
+# fi
+
+exit 0
