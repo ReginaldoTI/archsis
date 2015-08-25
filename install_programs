@@ -358,7 +358,7 @@ package_install "catfish"
 package_install "gedit"
 package_install "xscreensaver"
 package_install "git gsfonts meld"
-package_install "gvfs gvfs-smb smbclient sshfs" #gnome-vfs
+package_install "gvfs gvfs-smb gvfs-nfs smbclient sshfs" #gnome-vfs
 package_install "cherrytree"
 #package_install "vlc"
 package_install "totem"
@@ -447,6 +447,7 @@ aur_package_install "gnome-encfs-manager" # libgee06 as dependency
 aur_package_install "dropbox"
 aur_package_install "sublime-text-dev"
 aur_package_install "atom-editor"
+aur_package_install "visual-studio-code"
 
 # turn off, more secure
 sed -i '/%wheel ALL=(ALL) NOPASSWD: ALL/s/^/#/' ${MOUNT_POINT}/etc/sudoers

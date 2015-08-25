@@ -1,0 +1,293 @@
+ [X] Installing () dmidecode   sharedfuncs: line 628: pacman: command not found
+7918's retcode: 127failed
+ [X] Detecting video chipset Intel
+ [X] Installing () xf86-video-intel   sharedfuncs: line 628: pacman: command not found
+7958's retcode: 127failed
+ [X] Installing () libva-intel-driver   sharedfuncs: line 628: pacman: command not found
+7969's retcode: 127failed
+ [X] Installing () mesa-libgl   sharedfuncs: line 628: pacman: command not found
+7980's retcode: 127failed
+ [X] Installing () xfce4   sharedfuncs: line 628: pacman: command not found
+8003's retcode: 127failed
+ [X] Installing () xfce4-goodies   sharedfuncs: line 628: pacman: command not found
+8014's retcode: 127failed
+ [X] Installing () gdm   sharedfuncs: line 628: pacman: command not found
+8027's retcode: 127failed
+ [X] systemctl enable gdm sharedfuncs: line 718: systemctl: command not found
+  8027's retcode: 127failed
+ [X] Installing () networkmanager   sharedfuncs: line 628: pacman: command not found
+8044's retcode: 127failed
+ [X] Installing () dnsmasq   sharedfuncs: line 628: pacman: command not found
+8055's retcode: 127failed
+ [X] Installing () network-manager-applet   sharedfuncs: line 628: pacman: command not found
+8066's retcode: 127failed
+ [X] Installing () networkmanager-openconnect   sharedfuncs: line 628: pacman: command not found
+8077's retcode: 127failed
+ [X] Installing () networkmanager-openvpn   sharedfuncs: line 628: pacman: command not found
+8088's retcode: 127failed
+ [X] Installing () networkmanager-pptp   sharedfuncs: line 628: pacman: command not found
+8099's retcode: 127failed
+ [X] Installing () networkmanager-vpnc   sharedfuncs: line 628: pacman: command not found
+8110's retcode: 127failed
+ [X] systemctl enable NetworkManager sharedfuncs: line 718: systemctl: command not found
+  8110's retcode: 127failed
+ [X] systemctl start NetworkManager sharedfuncs: line 718: systemctl: command not found
+  8110's retcode: 127failed
+ [X] Installing () bc   sharedfuncs: line 628: pacman: command not found
+8141's retcode: 127failed
+ [X] Installing () rsync   sharedfuncs: line 628: pacman: command not found
+8152's retcode: 127failed
+ [X] Installing () mlocate   sharedfuncs: line 628: pacman: command not found
+8163's retcode: 127failed
+ [X] Installing () bash-completion   sharedfuncs: line 628: pacman: command not found
+8174's retcode: 127failed
+ [X] Installing () pkgstats   sharedfuncs: line 628: pacman: command not found
+8185's retcode: 127failed
+ [X] Installing () ntp   sharedfuncs: line 628: pacman: command not found
+8196's retcode: 127failed
+ [X] Installing () zip   sharedfuncs: line 628: pacman: command not found
+8208's retcode: 127failed
+ [X] Installing () unzip   sharedfuncs: line 628: pacman: command not found
+8219's retcode: 127failed
+ [X] Installing () unrar   sharedfuncs: line 628: pacman: command not found
+8230's retcode: 127failed
+ [X] Installing () p7zip   sharedfuncs: line 628: pacman: command not found
+8241's retcode: 127failed
+ [X] Installing () avahi   sharedfuncs: line 628: pacman: command not found
+8252's retcode: 127failed
+ [X] Installing () nss-mdns   sharedfuncs: line 628: pacman: command not found
+8263's retcode: 127failed
+ [X] systemctl enable avahi-daemon sharedfuncs: line 718: systemctl: command not found
+  8263's retcode: 127failed
+ [X] Installing () alsa-utils   sharedfuncs: line 628: pacman: command not found
+8280's retcode: 127failed
+ [X] Installing () alsa-plugins   sharedfuncs: line 628: pacman: command not found
+8291's retcode: 127failed
+ [X] Installing () lib32-alsa-plugins   sharedfuncs: line 628: pacman: command not found
+8302's retcode: 127failed
+ [X] Installing () pulseaudio   sharedfuncs: line 628: pacman: command not found
+8313's retcode: 127failed
+ [X] Installing () pulseaudio-alsa   sharedfuncs: line 628: pacman: command not found
+8324's retcode: 127failed
+ [X] Installing () pavucontrol   sharedfuncs: line 628: pacman: command not found
+8335's retcode: 127failed
+ [X] Installing () lib32-libpulse   sharedfuncs: line 628: pacman: command not found
+8346's retcode: 127failed
+ [X] Installing () ntfs-3g   sharedfuncs: line 628: pacman: command not found
+8357's retcode: 127failed
+ [X] Installing () dosfstools   sharedfuncs: line 628: pacman: command not found
+8368's retcode: 127failed
+ [X] Installing () exfat-utils   sharedfuncs: line 628: pacman: command not found
+8379's retcode: 127failed
+ [X] Installing () fuse   sharedfuncs: line 628: pacman: command not found
+8390's retcode: 127failed
+ [X] Installing () fuse-exfat   sharedfuncs: line 628: pacman: command not found
+8401's retcode: 127failed
+ [X] Installing () autofs   sharedfuncs: line 628: pacman: command not found
+8412's retcode: 127failed
+ [X] Installing () nfs-utils   sharedfuncs: line 628: pacman: command not found
+8424's retcode: 127failed
+ [X] systemctl enable rpcbind sharedfuncs: line 718: systemctl: command not found
+  8424's retcode: 127failed
+ [X] systemctl enable nfs-client.target sharedfuncs: line 718: systemctl: command not found
+  8424's retcode: 127failed
+ [X] systemctl enable remote-fs.target sharedfuncs: line 718: systemctl: command not found
+  8424's retcode: 127failed
+ [X] Installing () acpi   sharedfuncs: line 628: pacman: command not found
+8453's retcode: 127failed
+ [X] Installing () acpid   sharedfuncs: line 628: pacman: command not found
+8464's retcode: 127failed
+ [X] systemctl enable acpid sharedfuncs: line 718: systemctl: command not found
+  8464's retcode: 127failed
+ [X] Installing () mc   sharedfuncs: line 628: pacman: command not found
+8481's retcode: 127failed
+ [X] Installing () curl   sharedfuncs: line 628: pacman: command not found
+8492's retcode: 127failed
+ [X] Installing () lynx   sharedfuncs: line 628: pacman: command not found
+8503's retcode: 127failed
+ [X] Installing () wget   sharedfuncs: line 628: pacman: command not found
+8514's retcode: 127failed
+ [X] Installing () terminator   sharedfuncs: line 628: pacman: command not found
+8525's retcode: 127failed
+ [X] Installing () rsync   sharedfuncs: line 628: pacman: command not found
+8536's retcode: 127failed
+ [X] Installing () rdesktop   sharedfuncs: line 628: pacman: command not found
+8547's retcode: 127failed
+ [X] Installing () gparted   sharedfuncs: line 628: pacman: command not found
+8558's retcode: 127failed
+ [X] Installing () htop   sharedfuncs: line 628: pacman: command not found
+8569's retcode: 127failed
+ [X] Installing () encfs   sharedfuncs: line 628: pacman: command not found
+8580's retcode: 127failed
+ [X] Installing () davfs2   sharedfuncs: line 628: pacman: command not found
+8591's retcode: 127failed
+ [X] Installing () catfish   sharedfuncs: line 628: pacman: command not found
+8602's retcode: 127failed
+ [X] Installing () gedit   sharedfuncs: line 628: pacman: command not found
+8613's retcode: 127failed
+ [X] Installing () xscreensaver   sharedfuncs: line 628: pacman: command not found
+8624's retcode: 127failed
+ [X] Installing () git   sharedfuncs: line 628: pacman: command not found
+8635's retcode: 127failed
+ [X] Installing () gsfonts   sharedfuncs: line 628: pacman: command not found
+8646's retcode: 127failed
+ [X] Installing () meld   sharedfuncs: line 628: pacman: command not found
+8657's retcode: 127failed
+ [X] Installing () gvfs   sharedfuncs: line 628: pacman: command not found
+8668's retcode: 127failed
+ [X] Installing () gvfs-smb   sharedfuncs: line 628: pacman: command not found
+8680's retcode: 127failed
+ [X] Installing () smbclient   sharedfuncs: line 628: pacman: command not found
+8691's retcode: 127failed
+ [X] Installing () sshfs   sharedfuncs: line 628: pacman: command not found
+8702's retcode: 127failed
+ [X] Installing () cherrytree   sharedfuncs: line 628: pacman: command not found
+8713's retcode: 127failed
+ [X] Installing () totem   sharedfuncs: line 628: pacman: command not found
+8724's retcode: 127failed
+ [X] Installing () audacious   sharedfuncs: line 628: pacman: command not found
+8735's retcode: 127failed
+ [X] Installing () audacious-plugins   sharedfuncs: line 628: pacman: command not found
+8746's retcode: 127failed
+ [X] Installing () banshee   sharedfuncs: line 628: pacman: command not found
+8757's retcode: 127failed
+ [X] Installing () firefox   sharedfuncs: line 628: pacman: command not found
+8768's retcode: 127failed
+ [X] Installing () firefox-i18n-en-us   sharedfuncs: line 628: pacman: command not found
+8779's retcode: 127failed
+ [X] Installing () firefox-adblock-plus   sharedfuncs: line 628: pacman: command not found
+8790's retcode: 127failed
+ [X] Installing () flashplugin   sharedfuncs: line 628: pacman: command not found
+8801's retcode: 127failed
+ [X] Installing () thunderbird   sharedfuncs: line 628: pacman: command not found
+8812's retcode: 127failed
+ [X] Installing () thunderbird-i18n-en-us   sharedfuncs: line 628: pacman: command not found
+8823's retcode: 127failed
+ [X] Installing () chromium   sharedfuncs: line 628: pacman: command not found
+8834's retcode: 127failed
+ [X] Installing () opera   sharedfuncs: line 628: pacman: command not found
+8845's retcode: 127failed
+ [X] Installing () libreoffice-fresh   sharedfuncs: line 628: pacman: command not found
+8856's retcode: 127failed
+ [X] Installing () libreoffice-fresh-en-US   sharedfuncs: line 628: pacman: command not found
+8867's retcode: 127failed
+ [X] Installing () unoconv   sharedfuncs: line 628: pacman: command not found
+8879's retcode: 127failed
+ [X] Installing () inkscape   sharedfuncs: line 628: pacman: command not found
+8890's retcode: 127failed
+ [X] Installing () python2-numpy   sharedfuncs: line 628: pacman: command not found
+8901's retcode: 127failed
+ [X] Installing () python-lxml   sharedfuncs: line 628: pacman: command not found
+8912's retcode: 127failed
+ [X] Installing () gimp   sharedfuncs: line 628: pacman: command not found
+8923's retcode: 127failed
+ [X] Installing () evince   sharedfuncs: line 628: pacman: command not found
+8934's retcode: 127failed
+ [X] Installing () simple-scan   sharedfuncs: line 628: pacman: command not found
+8945's retcode: 127failed
+ [X] Installing () transmission-gtk   sharedfuncs: line 628: pacman: command not found
+8956's retcode: 127failed
+ [X] Installing () skype   sharedfuncs: line 628: pacman: command not found
+8967's retcode: 127failed
+ [X] Installing () audacity   sharedfuncs: line 628: pacman: command not found
+8978's retcode: 127failed
+ [X] Installing () easytag   sharedfuncs: line 628: pacman: command not found
+8989's retcode: 127failed
+ [X] Installing () handbrake   sharedfuncs: line 628: pacman: command not found
+9000's retcode: 127failed
+ [X] Installing () gst-libav   sharedfuncs: line 628: pacman: command not found
+9011's retcode: 127failed
+ [X] Installing () gst-plugins-bad   sharedfuncs: line 628: pacman: command not found
+9022's retcode: 127failed
+ [X] Installing () gst-plugins-base   sharedfuncs: line 628: pacman: command not found
+9033's retcode: 127failed
+ [X] Installing () gst-plugins-good   sharedfuncs: line 628: pacman: command not found
+9044's retcode: 127failed
+ [X] Installing () gst-plugins-ugly   sharedfuncs: line 628: pacman: command not found
+9055's retcode: 127failed
+ [X] Installing () gst-plugins-base-libs   sharedfuncs: line 628: pacman: command not found
+9066's retcode: 127failed
+ [X] Installing () gstreamer0.10   sharedfuncs: line 628: pacman: command not found
+9077's retcode: 127failed
+ [X] Installing () gstreamer0.10-plugins   sharedfuncs: line 628: pacman: command not found
+9088's retcode: 127failed
+ [X] Installing () libbluray   sharedfuncs: line 628: pacman: command not found
+9099's retcode: 127failed
+ [X] Installing () libquicktime   sharedfuncs: line 628: pacman: command not found
+9110's retcode: 127failed
+ [X] Installing () libdvdread   sharedfuncs: line 628: pacman: command not found
+9121's retcode: 127failed
+ [X] Installing () libdvdnav   sharedfuncs: line 628: pacman: command not found
+9132's retcode: 127failed
+ [X] Installing () libdvdcss   sharedfuncs: line 628: pacman: command not found
+9143's retcode: 127failed
+ [X] Installing () cdrdao   sharedfuncs: line 628: pacman: command not found
+9154's retcode: 127failed
+ [X] Installing () gnome-keyring   sharedfuncs: line 628: pacman: command not found
+9174's retcode: 127failed
+ [X] Installing () seahorse   sharedfuncs: line 628: pacman: command not found
+9185's retcode: 127failed
+ [X] Installing () ttf-droid   sharedfuncs: line 628: pacman: command not found
+9196's retcode: 127failed
+ [X] Installing () ttf-dejavu   sharedfuncs: line 628: pacman: command not found
+9207's retcode: 127failed
+ [X] Installing () xcursor-themes   sharedfuncs: line 628: pacman: command not found
+9218's retcode: 127failed
+ [X] Installing () numix-themes   sharedfuncs: line 628: pacman: command not found
+9229's retcode: 127failed
+ [X] Installing () adwaita-icon-theme   sharedfuncs: line 628: pacman: command not found
+9240's retcode: 127failed
+ [X] Installing () gnome-icon-theme   sharedfuncs: line 628: pacman: command not found
+9251's retcode: 127failed
+ [X] Installing () gnome-icon-theme-extras   sharedfuncs: line 628: pacman: command not found
+9262's retcode: 127failed
+ [X] Installing () gnome-icon-theme-symbolic   sharedfuncs: line 628: pacman: command not found
+9273's retcode: 127failed
+ [X] Installing () hicolor-icon-theme   sharedfuncs: line 628: pacman: command not found
+9284's retcode: 127failed
+ [X] Installing () faenza-icon-theme   sharedfuncs: line 628: pacman: command not found
+9295's retcode: 127failed
+ [X] Installing () faience-icon-theme   sharedfuncs: line 628: pacman: command not found
+9306's retcode: 127failed
+ [X] Installing () hunspell   sharedfuncs: line 628: pacman: command not found
+9317's retcode: 127failed
+ [X] Installing () hunspell-en-US   sharedfuncs: line 628: pacman: command not found
+9328's retcode: 127failed
+ [X] Installing () hyphen   sharedfuncs: line 628: pacman: command not found
+9339's retcode: 127failed
+ [X] Installing () hyphen-en-US   sharedfuncs: line 628: pacman: command not found
+9350's retcode: 127failed
+ [X] Installing () libmythes   sharedfuncs: line 628: pacman: command not found
+9361's retcode: 127failed
+ [X] Installing () mythes   sharedfuncs: line 628: pacman: command not found
+9372's retcode: 127failed
+ [X] Installing () mythes-en-US   sharedfuncs: line 628: pacman: command not found
+9383's retcode: 127failed
+ [X] Installing () usbutils   sharedfuncs: line 628: pacman: command not found
+9394's retcode: 127failed
+ [X] Installing () usb_modeswitch   sharedfuncs: line 628: pacman: command not found
+9405's retcode: 127failed
+ [X] Installing () modemmanager   sharedfuncs: line 628: pacman: command not found
+9416's retcode: 127failed
+ [X] Installing () clamav   sharedfuncs: line 628: pacman: command not found
+9427's retcode: 127failed
+ [X] systemctl enable clamd sharedfuncs: line 718: systemctl: command not found
+  9427's retcode: 127failed
+ [X] systemctl enable freshclamd sharedfuncs: line 718: systemctl: command not found
+  9427's retcode: 127failed
+ [X] Installing () openssh   sharedfuncs: line 628: pacman: command not found
+9455's retcode: 127failed
+ [X] systemctl enable sshd sharedfuncs: line 718: systemctl: command not found
+  9455's retcode: 127failed
+ [X] Installing () virtualbox   sharedfuncs: line 628: pacman: command not found
+9475's retcode: 127failed
+ [X] Installing () virtualbox-host-modules   sharedfuncs: line 628: pacman: command not found
+9486's retcode: 127failed
+ [X] Installing () virtualbox-guest-iso   sharedfuncs: line 628: pacman: command not found
+9497's retcode: 127failed
+ [X] Adding luis to vboxusers   gpasswd: Permission denied.
+9503's retcode: 1failed
+ [X] Installing () samba   sharedfuncs: line 628: pacman: command not found
+9539's retcode: 127failed
+ [X] Installing () smbnetfs   sharedfuncs: line 628: pacman: command not found
+9550's retcode: 127failed
