@@ -112,8 +112,8 @@ fi
 # nameserver 2001:4860:4860::8888
 # nameserver 2001:4860:4860::8844
 
-# # Comodo nameservers 
-# nameserver 8.26.56.26 
+# # Comodo nameservers
+# nameserver 8.26.56.26
 # nameserver 8.20.247.20
 
 # # Basic Yandex.DNS - Quick and reliable DNS
@@ -128,12 +128,16 @@ fi
 
 # # censurfridns.dk IPv4 nameservers
 # nameserver 91.239.100.100
-# nameserver 89.233.43.71 
+# nameserver 89.233.43.71
 # # censurfridns.dk IPv6 nameservers
-# nameserver 2001:67c:28a4::   
+# nameserver 2001:67c:28a4::
 # nameserver 2002:d596:2a92:1:71:53::
 # EOF
 # }
+
+make_partition(){
+    parted -s "$1" unit s mkpart primary "$2" "$3"
+}
 
 setup_connection() { #{{{
 
@@ -145,7 +149,7 @@ setup_connection() { #{{{
     ip link set ${CONNECTION_DEVICE} down
     ip link set ${CONNECTION_DEVICE} up
     ip addr add ${IP_ADDR}/${SUBMASK} dev ${CONNECTION_DEVICE}
-    ip route add default via ${GATEWAY}   
+    ip route add default via ${GATEWAY}
 
     echo "nameserver ${NAMESERVER}" >> /etc/resolv.conf
     if [ ! -z $DNS_SEARCH ] ; then
@@ -565,7 +569,7 @@ configure_mirrorlist(){
       su - ${username} -c "
         pwd
         [[ ! -d aui_packages ]] && mkdir aui_packages
-        cd aui_packages      
+        cd aui_packages
         wget https://aur.archlinux.org/cgit/aur.git/snapshot/${PKG}.tar.gz
         tar zxvf ${PKG}.tar.gz
         rm ${PKG}.tar.gz

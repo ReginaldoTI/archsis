@@ -41,9 +41,8 @@ if [[ $UEFI -eq 0 ]]; then
 	parted -s $DEVICE mkpart primary ext4 256M 100%
 	partprobe $DEVICE ## tell kernel we have a new partition table
 else
-
+  make_partition $DEVICE `parted -m $DEVICE unit s print free | grep 'free;' | sort -t : -k 4n -k 2n | tail -n 1 | awk -F':' '{print $2 " " $3}'`
 fi
-
 
 if [ $SEPARATE_HOME == true ]; then
 	# cfdisk $HOME_DEVICE

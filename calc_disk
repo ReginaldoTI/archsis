@@ -1,12 +1,20 @@
 #!/bin/bash
 
+## layout
+# Number  Start   End    Size   Type      File system  Flags
+
 PARTITION_TYPE=$(parted $1 print | grep "Partition Table" | awk '{print $3;}')
 PARTITION_SIZE=$(parted $1 print | grep "Disk $1" | awk '{print $3;}')
-PARTINION_N=$(parted $1 print | sed -n -e 7,15p)
+PARTINION_N=$(parted $1 print | sed -n -e '7,15p')
 
 echo $PARTITION_TYPE
 echo $PARTITION_SIZE
-echo $PARTINION_N
+# echo $PARTINION_N
+
+# NAMESERVERS=("ns1.nixcraft.net." "ns2.nixcraft.net." "ns3.nixcraft.net.")
+# # get length of an array
+# tLen=${#NAMESERVERS[@]}
+# echo $tLen
 
 for i in "${PARTINION_N[@]}"; do
   echo $i
