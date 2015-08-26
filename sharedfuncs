@@ -136,7 +136,7 @@ fi
 # }
 
 make_partition(){
-    parted -s "$1" unit s mkpart primary "$2" "$3"
+    parted -s "$1" unit GB mkpart primary "$2" "$3"
 }
 
 setup_connection() { #{{{

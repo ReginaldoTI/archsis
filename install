@@ -24,24 +24,28 @@ configure_mirrorlist
 # multilib
 check_multilib
 
-# try to see free space on already used disk
-# block_list=(`lsblk | grep 'part' | awk '{print "/dev/" substr($1,3) " " substr($4,0)}'`)
-# sfdisk -l ;dev;sda ... start end
-
 # partition MBR!!! ... how work with gpt/efi
 if [[ $UEFI -eq 0 ]]; then
-	## create msdos disk
-	parted -s $DEVICE mklabel msdos # gpt
-	## /dev/sda1
-	parted -s $DEVICE mkpart primary ext2 1M 256M
-	partprobe $DEVICE ## tell kernel we have a new partition table
-	## make partition active (bootable)
-	parted -s $DEVICE set 1 boot on
-	## /dev/sda2
-	parted -s $DEVICE mkpart primary ext4 256M 100%
-	partprobe $DEVICE ## tell kernel we have a new partition table
+
+  if [ "$PARTITION_TABLE" == "msdos" ]; then
+  	## create msdos disk
+  	parted -s $DEVICE mklabel msdos
+  	## /dev/sda1
+  	parted -s $DEVICE mkpart primary ext2 1M 256M
+  	partprobe $DEVICE ## tell kernel we have a new partition table
+  	## make partition active (bootable)
+  	parted -s $DEVICE set 1 boot on
+  	## /dev/sda2
+  	parted -s $DEVICE mkpart primary ext4 256M 100%
+  	partprobe $DEVICE ## tell kernel we have a new partition table
+  elif [ "$PARTITION_TABLE" == "gpt" ]; then
+    #make_partition $DEVICE `parted -m $DEVICE unit GB print free | grep 'free;' | sort -t : -k 4n -k 2n | tail -n 1 | awk -F':' '{print $2 " " $3}'`
+    make_partition $DEVICE `parted -m $DEVICE unit GB print free | grep 'free;' | sort -t : -k 4n -k 2n | tail -n 1 | awk -F':' '{print $2}'` 512MB
+    make_partition $DEVICE `parted -m $DEVICE unit GB print free | grep 'free;' | sort -t : -k 4n -k 2n | tail -n 1 | awk -F':' '{print $2}'` 25GB
+    make_partition $DEVICE `parted -m $DEVICE unit GB print free | grep 'free;' | sort -t : -k 4n -k 2n | tail -n 1 | awk -F':' '{print $2}'` 100%
+  fi
 else
-  make_partition $DEVICE `parted -m $DEVICE unit s print free | grep 'free;' | sort -t : -k 4n -k 2n | tail -n 1 | awk -F':' '{print $2 " " $3}'`
+  make_partition $DEVICE `parted -m $DEVICE unit GB print free | grep 'free;' | sort -t : -k 4n -k 2n | tail -n 1 | awk -F':' '{print $2 " " $3}'`
 fi
 
 if [ $SEPARATE_HOME == true ]; then
