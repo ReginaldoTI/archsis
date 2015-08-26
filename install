@@ -39,10 +39,9 @@ if [[ $UEFI -eq 0 ]]; then
   	parted -s $DEVICE mkpart primary ext4 256M 100%
   	partprobe $DEVICE ## tell kernel we have a new partition table
   elif [ "$PARTITION_TABLE" == "gpt" ]; then
-    #make_partition $DEVICE `parted -m $DEVICE unit GB print free | grep 'free;' | sort -t : -k 4n -k 2n | tail -n 1 | awk -F':' '{print $2 " " $3}'`
-    make_partition $DEVICE `parted -m $DEVICE unit GB print free | grep 'free;' | sort -t : -k 4n -k 2n | tail -n 1 | awk -F':' '{print $2}'` 512MB
-    make_partition $DEVICE `parted -m $DEVICE unit GB print free | grep 'free;' | sort -t : -k 4n -k 2n | tail -n 1 | awk -F':' '{print $2}'` 25GB
-    make_partition $DEVICE `parted -m $DEVICE unit GB print free | grep 'free;' | sort -t : -k 4n -k 2n | tail -n 1 | awk -F':' '{print $2}'` 100%
+    make_partition $DEVICE 256MB `parted -m $DEVICE unit MB print free | grep 'free;' | sort -t : -k 4n -k 2n | tail -n 1 | awk -F':' '{print $2}'`
+    make_partition $DEVICE 25000MB `parted -m $DEVICE unit MB print free | grep 'free;' | sort -t : -k 4n -k 2n | tail -n 1 | awk -F':' '{print $2}'`
+    make_partition_auto $DEVICE `parted -m $DEVICE unit MB print free | grep 'free;' | sort -t : -k 4n -k 2n | tail -n 1 | awk -F':' '{print $2 " " $3}'`
   fi
 else
   make_partition $DEVICE `parted -m $DEVICE unit GB print free | grep 'free;' | sort -t : -k 4n -k 2n | tail -n 1 | awk -F':' '{print $2 " " $3}'`

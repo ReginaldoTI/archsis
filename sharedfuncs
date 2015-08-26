@@ -136,7 +136,18 @@ fi
 # }
 
 make_partition(){
-    parted -s "$1" unit GB mkpart primary "$2" "$3"
+    DEVICE=$1
+    SIZE=$2
+    START=$3
+    END=$(($START+$SIZE))
+    parted -s "$DEVICE" unit MB mkpart primary "$START" "$END"
+}
+
+make_partition_auto(){
+    DEVICE=$1
+    START=$2
+    END=$3
+    parted -s "$DEVICE" unit MB mkpart primary "$START" "$END"
 }
 
 setup_connection() { #{{{
