@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# You can sed "s/$1/pitt/g" or sed 's/'$1'/pitt/g'
+
+echo $1 $2
+
+FIRST=$(echo $1 | sed "s/[A-Z/a-z/,.]*//g")
+SECOND=$(echo $2 | sed "s/[A-Z/a-z/,.]//g")
+RESULT=$(($FIRST+$SECOND))
+echo $FIRST "+" $SECOND "=" $RESULT
+
+exit 0

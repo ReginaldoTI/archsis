@@ -137,8 +137,8 @@ fi
 
 make_partition(){
     DEVICE=$1
-    SIZE=$2
-    START=$3
+    SIZE=$(echo $2 | sed "s/[A-Z/a-z/,.]*//g")
+    START=$(echo $3 | sed "s/[A-Z/a-z/,.]*//g")
     END=$(($START+$SIZE))
     parted -s "$DEVICE" unit MB mkpart primary "$START" "$END"
 }
