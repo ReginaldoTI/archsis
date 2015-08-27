@@ -29,11 +29,8 @@ PARTITION_TABLE=$(parted $DEVICE print | grep "Partition Table" | awk '{print $3
 if [ "$PARTITION_TABLE" == "gpt" ]; then
   BIOS_BOOT="/dev/sda6"
   GPT_PARTITION_NUMBER="6"
-  BOOT_MOUNT_POINT_GPT="/dev/sda7"
-  ROOT_MOUNT_POINT_GPT="/dev/sda8"
-
-  $BOOT_MOUNT_POINT=$BOOT_MOUNT_POINT_GPT
-  $ROOT_MOUNT_POINT=$ROOT_MOUNT_POINT_GPT
+  BOOT_MOUNT_POINT="/dev/sda6"
+  ROOT_MOUNT_POINT="/dev/sda7"
 fi
 
 # "AU" "AT" "BY" "BE" "BR" "BG" "CA" "CL" "CN" "CO" "CZ" "DK" "EE" "FI" "FR" "DE" "GR" "HU" "IN" "IE" "IL" "IT" "JP" "KZ" "KR" "LV" "LU" "MK" "NL" "NC" "NZ" "NO" "PL" "PT" "RO" "RU" "RS" "SG" "SK" "ZA" "ES" "LK" "SE" "CH" "TW" "TR" "UA" "GB" "US" "UZ" "VN")
