@@ -27,10 +27,9 @@ WIRELESS_DEV=`ip link | grep wlp | awk '{print $2}'| sed 's/://' | sed '1!d'`
 PARTITION_TABLE=$(parted $DEVICE print | grep "Partition Table" | awk '{print $3;}')
 
 if [ "$PARTITION_TABLE" == "gpt" ]; then
-  BIOS_BOOT="/dev/sda6"
-  GPT_PARTITION_NUMBER="6"
-  BOOT_MOUNT_POINT="/dev/sda6"
-  ROOT_MOUNT_POINT="/dev/sda7"
+  GPT_PARTITION_NUMBER="6" # BIOS_BOOT
+  BOOT_MOUNT_POINT="/dev/sda7"
+  ROOT_MOUNT_POINT="/dev/sda8"
 fi
 
 # "AU" "AT" "BY" "BE" "BR" "BG" "CA" "CL" "CN" "CO" "CZ" "DK" "EE" "FI" "FR" "DE" "GR" "HU" "IN" "IE" "IL" "IT" "JP" "KZ" "KR" "LV" "LU" "MK" "NL" "NC" "NZ" "NO" "PL" "PT" "RO" "RU" "RS" "SG" "SK" "ZA" "ES" "LK" "SE" "CH" "TW" "TR" "UA" "GB" "US" "UZ" "VN")
