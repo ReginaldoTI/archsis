@@ -4,8 +4,6 @@
 
 # vars
 DEVICE="/dev/sda"
-EFI_MOUNT_POINT="/boot/efi"
-EFI_MOUNT="/dev/sda2"
 MBR_MOUNT_POINT="/dev/sda"
 BOOT_MOUNT_POINT="/dev/sda1"
 ROOT_MOUNT_POINT="/dev/sda2"
@@ -30,9 +28,11 @@ PARTITION_TABLE=$(parted $DEVICE print | grep "Partition Table" | awk '{print $3
 
 if [ "$PARTITION_TABLE" == "gpt" ]; then
   GPT_PARTITION_NUMBER="6" # BIOS_BOOT
-  BOOT_MOUNT_POINT="/dev/sda2"
-  ROOT_MOUNT_POINT="/dev/sda8"
+  BOOT_MOUNT_POINT="/dev/sda2" # EFI System
+  ROOT_MOUNT_POINT="/dev/sda7" # change root system
 fi
+
+[[ $UEFI -eq 1 ]] && 
 
 # "AU" "AT" "BY" "BE" "BR" "BG" "CA" "CL" "CN" "CO" "CZ" "DK" "EE" "FI" "FR" "DE" "GR" "HU" "IN" "IE" "IL" "IT" "JP" "KZ" "KR" "LV" "LU" "MK" "NL" "NC" "NZ" "NO" "PL" "PT" "RO" "RU" "RS" "SG" "SK" "ZA" "ES" "LK" "SE" "CH" "TW" "TR" "UA" "GB" "US" "UZ" "VN")
 # "Australia" "Austria" "Belarus" "Belgium" "Brazil" "Bulgaria" "Canada" "Chile" "China" "Colombia" "Czech Republic" "Denmark" "Estonia" "Finland" "France" "Germany" "Greece" "Hungary" "India" "Ireland" "Israel" "Italy" "Japan" "Kazakhstan" "Korea" "Latvia" "Luxembourg" "Macedonia" "Netherlands" "New Caledonia" "New Zealand" "Norway" "Poland" "Portugal" "Romania" "Russian" "Serbia" "Singapore" "Slovakia" "South Africa" "Spain" "Sri Lanka" "Sweden" "Switzerland" "Taiwan" "Turkey" "Ukraine" "United Kingdom" "United States" "Uzbekistan" "Viet Nam")

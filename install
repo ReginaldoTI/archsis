@@ -45,13 +45,9 @@ if [[ $UEFI -eq 0 ]]; then
     partprobe $DEVICE
   fi
 elif [[ $UEFI -eq 1 ]]; then
-	
   if [ "$PARTITION_TABLE" == "gpt" ]; then
-
     make_partition $DEVICE 1MB `parted -m $DEVICE unit MB print free | grep 'free;' | sort -t : -k 4n -k 2n | tail -n 1 | awk -F':' '{print $2}'`
     parted $DEVICE set $GPT_PARTITION_NUMBER bios_grub on
-    make_partition $DEVICE 256MB `parted -m $DEVICE unit MB print free | grep 'free;' | sort -t : -k 4n -k 2n | tail -n 1 | awk -F':' '{print $2}'`
-    # make_partition $DEVICE 25000MB `parted -m $DEVICE unit MB print free | grep 'free;' | sort -t : -k 4n -k 2n | tail -n 1 | awk -F':' '{print $2}'`
     make_partition_auto $DEVICE `parted -m $DEVICE unit MB print free | grep 'free;' | sort -t : -k 4n -k 2n | tail -n 1 | awk -F':' '{print $2 " " $3}'`
     partprobe $DEVICE
   fi
@@ -126,8 +122,10 @@ mkswap /dev/mapper/$SWAP
 mkfs.ext4 /dev/mapper/$HOME
 
 # formatting boot
-dd if=/dev/zero of=$BOOT_MOUNT_POINT bs=4096 count=1024 && sync # 1M
-mkfs.ext2 $BOOT_MOUNT_POINT
+if [[ $UEFI -eq 0 ]]; then
+  dd if=/dev/zero of=$BOOT_MOUNT_POINT bs=4096 count=1024 && sync # 1M
+  mkfs.ext2 $BOOT_MOUNT_POINT
+fi
 
 # # mounting root
 mount /dev/mapper/$ROOT $MOUNT_POINT
@@ -140,8 +138,6 @@ pacstrap $MOUNT_POINT base base-devel dialog wpa_supplicant
 mount $BOOT_MOUNT_POINT $MOUNT_POINT/boot
 swapon /dev/mapper/$SWAP
 mount /dev/mapper/$HOME $MOUNT_POINT/home
-
-[[ $UEFI -eq 1 ]] && mkdir ${MOUNT_POINT}${EFI_MOUNT_POINT} && mount $EFI_MOUNT $MOUNT_POINT$EFI_MOUNT_POINT
 
 # generate fstab based on mounted devices
 if [[ $UEFI -eq 0 ]]; then
@@ -197,7 +193,7 @@ arch_chroot "mkinitcpio -p linux"
 
 # install grub
 if [[ $UEFI -eq 1 ]]; then
-  arch_chroot "grub-install --target=x86_64-efi --efi-directory=${EFI_MOUNT_POINT} --bootloader-id=arch_grub --recheck"
+  arch_chroot "grub-install --target=x86_64-efi --efi-directory=${BOOT_MOUNT_POINT} --bootloader-id=arch_grub --recheck"
 else
   arch_chroot "grub-install --target=i386-pc --recheck '${MBR_MOUNT_POINT}'"
 fi
