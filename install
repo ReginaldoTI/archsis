@@ -195,7 +195,8 @@ arch_chroot "mkinitcpio -p linux"
 
 # install grub
 if [[ $UEFI -eq 1 ]]; then
-  arch_chroot "grub-install --target=x86_64-efi --efi-directory=${$MOUNT_POINT}${EFI_MOUNTPOINT} --bootloader-id=arch_grub --recheck"
+  arch_chroot "mkdir ${EFI_MOUNTPOINT}"
+  arch_chroot "grub-install --target=x86_64-efi --efi-directory=${EFI_MOUNTPOINT} --bootloader-id=arch_grub --recheck"
 else
   arch_chroot "grub-install --target=i386-pc --recheck '${MBR_MOUNT_POINT}'"
 fi
