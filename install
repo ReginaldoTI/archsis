@@ -141,7 +141,7 @@ mount $BOOT_MOUNT_POINT $MOUNT_POINT/boot
 swapon /dev/mapper/$SWAP
 mount /dev/mapper/$HOME $MOUNT_POINT/home
 
-[[ $UEFI -eq 1 ]] && mount $EFI_MOUNT $MOUNT_POINT$EFI_MOUNT_POINT
+[[ $UEFI -eq 1 ]] && mkdir ${MOUNT_POINT}${EFI_MOUNT_POINT} && mount $EFI_MOUNT $MOUNT_POINT$EFI_MOUNT_POINT
 
 # generate fstab based on mounted devices
 if [[ $UEFI -eq 0 ]]; then
@@ -197,7 +197,6 @@ arch_chroot "mkinitcpio -p linux"
 
 # install grub
 if [[ $UEFI -eq 1 ]]; then
-  mkdir ${MOUNT_POINT}${EFI_MOUNT_POINT}
   arch_chroot "grub-install --target=x86_64-efi --efi-directory=${EFI_MOUNT_POINT} --bootloader-id=arch_grub --recheck"
 else
   arch_chroot "grub-install --target=i386-pc --recheck '${MBR_MOUNT_POINT}'"

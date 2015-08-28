@@ -30,7 +30,7 @@ PARTITION_TABLE=$(parted $DEVICE print | grep "Partition Table" | awk '{print $3
 
 if [ "$PARTITION_TABLE" == "gpt" ]; then
   GPT_PARTITION_NUMBER="6" # BIOS_BOOT
-  BOOT_MOUNT_POINT="/dev/sda7"
+  BOOT_MOUNT_POINT="/dev/sda2"
   ROOT_MOUNT_POINT="/dev/sda8"
 fi
 
