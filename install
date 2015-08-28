@@ -42,6 +42,7 @@ if [[ $UEFI -eq 0 ]]; then
     make_partition $DEVICE 256MB `parted -m $DEVICE unit MB print free | grep 'free;' | sort -t : -k 4n -k 2n | tail -n 1 | awk -F':' '{print $2}'`
     make_partition $DEVICE 25000MB `parted -m $DEVICE unit MB print free | grep 'free;' | sort -t : -k 4n -k 2n | tail -n 1 | awk -F':' '{print $2}'`
     make_partition_auto $DEVICE `parted -m $DEVICE unit MB print free | grep 'free;' | sort -t : -k 4n -k 2n | tail -n 1 | awk -F':' '{print $2 " " $3}'`
+    partprobe $DEVICE
   fi
 elif [[ $UEFI -eq 1 ]]; then
 	
@@ -133,6 +134,7 @@ mount /dev/mapper/$ROOT $MOUNT_POINT
 
 # install all necessary package
 pacstrap $MOUNT_POINT base base-devel dialog wpa_supplicant
+[[ $UEFI -eq 1 ]] && pacstrap ${MOUNT_POINT} efibootmgr dosfstools
 
 # mount boot, home and swap
 mount $BOOT_MOUNT_POINT $MOUNT_POINT/boot
@@ -192,8 +194,12 @@ arch_chroot "pacman -S linux --noconfirm"
 arch_chroot "mkinitcpio -p linux"
 
 # install grub
-#arch_chroot "grub-install --target=i386-pc --recheck --debug ${MBR_MOUNT_POINT}"
-arch_chroot "grub-install --target=i386-pc --recheck '${MBR_MOUNT_POINT}'"
+if [[ $UEFI -eq 1 ]]; then
+  arch_chroot "grub-install --target=x86_64-efi --efi-directory=${EFI_MOUNTPOINT} --bootloader-id=arch_grub --recheck"
+else
+  arch_chroot "grub-install --target=i386-pc --recheck '${MBR_MOUNT_POINT}'"
+fi
+
 arch_chroot "grub-mkconfig -o /boot/grub/grub.cfg"
 
 # change root password
