@@ -4,7 +4,8 @@
 
 # vars
 DEVICE="/dev/sda"
-EFI_MOUNTPOINT="/boot/efi"
+EFI_MOUNT_POINT="/boot/efi"
+EFI_MOUNT="/dev/sda2"
 MBR_MOUNT_POINT="/dev/sda"
 BOOT_MOUNT_POINT="/dev/sda1"
 ROOT_MOUNT_POINT="/dev/sda2"
