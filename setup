@@ -30,6 +30,7 @@ if [ "$PARTITION_TABLE" == "gpt" ]; then
   GPT_PARTITION_NUMBER="6" # BIOS_BOOT
   BOOT_MOUNT_POINT="/dev/sda2" # EFI System
   ROOT_MOUNT_POINT="/dev/sda7" # change root system
+  EFI_BOOT_MOUNT_POINT="/boot/efi"
 fi
 
 # "AU" "AT" "BY" "BE" "BR" "BG" "CA" "CL" "CN" "CO" "CZ" "DK" "EE" "FI" "FR" "DE" "GR" "HU" "IN" "IE" "IL" "IT" "JP" "KZ" "KR" "LV" "LU" "MK" "NL" "NC" "NZ" "NO" "PL" "PT" "RO" "RU" "RS" "SG" "SK" "ZA" "ES" "LK" "SE" "CH" "TW" "TR" "UA" "GB" "US" "UZ" "VN")
