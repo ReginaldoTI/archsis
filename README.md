@@ -1,24 +1,27 @@
 # archsis
 
-* Arch Simple Install Script
+## Arch Simple Install Script
 
-# download everything
+### download everything / baixe todos os arquivos
 wget https://github.com/luisantoniojr/archsis/tarball/master -O - | tar xz
 
 or
 
-# install separated
-wget -qO- https://raw.githubusercontent.com/luisantoniojr/archsis/master/install | bash
-wget -qO- https://raw.githubusercontent.com/luisantoniojr/archsis/master/install_programs | bash
+### Cloning...
+git clone https://github.com/luisantoniojr/archsis.git
 
 * WARNING!!!
-check setup file for all configurations! Otherwise you can lost data!
+Check setup file for all configurations! Otherwise you can lost your data!
+
++ AUTOMATIC_IP
++ SEPARETE_HOME
++ SAMBA
 
 First run ./install, to install arch O.S
 Then reboot
 enter directory luisantoniojr* and run sudo ./install_programs to install all programs.
 
-# Based on...
+### Based on...
 https://github.com/helmuthdu/aui ... [the master]
 http://www.tecmint.com/install-cinnamon-desktop-in-arch-linux/
 http://lifehacker.com/5680453/build-a-killer-customized-arch-linux-installation-and-learn-all-about-linux-in-the-process
