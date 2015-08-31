@@ -13,13 +13,14 @@ git clone https://github.com/luisantoniojr/archsis.git
 * WARNING!!!
 Check setup file for all configurations! Otherwise you can lost your data!
 
-+ AUTOMATIC_IP
-+ SEPARETE_HOME
-+ SAMBA
++ AUTOMATIC_IP, determine fixed address
++ SEPARATE_HOME, create home directory on separate disk
++ INSTALL_VIRTUALBOX, install virtualbox on host, not on guest system
++ INSTALL_SAMBA, install and configure SAMBA.
 
 First run ./install, to install arch O.S
 Then reboot
-enter directory luisantoniojr* and run sudo ./install_programs to install all programs.
+Enter in directory luisantoniojr* and run sudo ./install_programs to install all programs.
 
 ### Based on...
 https://github.com/helmuthdu/aui ... [the master]
@@ -32,5 +33,5 @@ https://wiki.archlinux.org/index.php/Archboot
 https://projects.archlinux.org/archboot.git/
 https://wiki.archlinux.org/index.php/Archiso
 
-# TODO
-ip address in network manager applet using nmcli.
+#### TODO
+ip address in network manager applet using nmcli. - Done.
