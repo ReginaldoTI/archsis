@@ -156,7 +156,7 @@ arch_chroot "sed -i '/::1/s/$/ '${HOST_NAME}'/' /etc/hosts"
 
 # modify hostname base on samba config
 if [ $INSTALL_SAMBA==true ]; then
-	if [ AUTHENTICATE_ON_SERVER==true ]; then
+	if [ $AUTHENTICATE_ON_SERVER==true ]; then
 		arch_chroot "sed -i -e '\$a'${DNS_IP}' '${NETBIOS_NAME}'.'${DNS_NAME}' '${NETBIOS_NAME}'' /etc/hosts"
 	fi
 fi
@@ -177,7 +177,7 @@ else
 fi
 
 # install grub and prober (auto detect system)
-arch_chroot "pacman -Syu grub grub-bios os-prober --noconfirm"
+arch_chroot "pacman -Syu grub grub-bios os-prober parted --noconfirm"
 
 # setup grub default
 sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet"/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash video=vesa:off"/' ${MOUNT_POINT}/etc/default/grub
