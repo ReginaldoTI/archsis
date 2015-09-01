@@ -217,7 +217,7 @@ install_samba(){
       sed -i 's|workgroup = MYGROUP|workgroup = '${WORK_GROUP}'\n|' /etc/samba/smb.conf
       sed -i -e '/\[global\]/a\\n   usershare path = /var/lib/samba/usershare\n   usershare max shares = 100\n   usershare allow guests = yes\n   usershare owner only = False   netbios name = ${NETBIOS_NAME}\n' /etc/samba/smb.conf
       sed -i -e '/\[global\]/a\\n   socket options = IPTOS_LOWDELAY TCP_NODELAY SO_KEEPALIVE\n   write cache size = 2097152\n   use sendfile = yes\n' /etc/samba/smb.conf
-      if [ AUTHENTICATE_ON_SERVER==true ]; then
+      if [ AUTHENTICATE_ON_SERVER==true ]; then # ???
         sed -i -e '/\[global\]/a\\n   realm = '${REALM}'\n   winbind separator = \\n   winbind use default domain = yes\n   winbind enum users  = yes\n   winbind enum groups = yes\n' /etc/samba/smb.conf
         sed -i "s|security = user|security = ads|" /etc/samba/smb.conf
         sed -i "s|;  encrypt passwords|encrypt passwords|" /etc/samba/smb.conf
@@ -240,12 +240,18 @@ install_samba(){
     while [[ $? -ne 0 ]]; do
       pdbedit -a -u ${username}
     done
+
+    # smbpasswd ???
+
     # enable services
     system_ctl enable smbd
     system_ctl enable nmbd
     if [ AUTHENTICATE_ON_SERVER==true ]; then
       system_ctl enable winbindd
     fi
+
+    # smbclient -L localhost –U user1 ???
+
     pause_function
   #fi
 }
@@ -358,7 +364,7 @@ package_install "catfish"
 package_install "gedit"
 package_install "xscreensaver"
 package_install "git gsfonts meld"
-package_install "gvfs gvfs-smb gvfs-nfs smbclient sshfs" #gnome-vfs
+package_install "gvfs gvfs-smb gvfs-nfs smbclient sshfs" # gnome-vfs # cifs-utils
 package_install "cherrytree"
 #package_install "vlc"
 package_install "totem"
@@ -378,6 +384,9 @@ package_install "skype"
 package_install "audacity"
 package_install "easytag"
 package_install "handbrake"
+
+# https://www.archlinux.org/packages/community/x86_64/plank/
+# package_install "plank"
 
 # stream / codecs
 package_install "gst-libav gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly gst-plugins-base-libs"
@@ -439,6 +448,13 @@ fi
 
 if [ $INSTALL_CUPS==true ]; then
   install_cups
+fi
+
+if [ $INSTALL_DOCKER==true ]; then
+  package_install "docker"
+  gpasswd -a ${USER_NAME} docker
+  system_ctl enable docker
+  system_ctl start docker
 fi
 
 # aur

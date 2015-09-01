@@ -21,9 +21,12 @@ LOCALE="en_US" # or pt_BR
 ARCHI=`uname -m` # ARCHITECTURE
 LOCAL_TIME=true
 
+# define setup install
+INSTALL_DOCKER=false
+
+# important vars
 WIRED_DEV=`ip link | grep "eno\|enp" | awk '{print $2}'| sed 's/://' | sed '1!d'`
 WIRELESS_DEV=`ip link | grep wlp | awk '{print $2}'| sed 's/://' | sed '1!d'`
-
 PARTITION_TABLE=$(parted $DEVICE print | grep "Partition Table" | awk '{print $3;}')
 
 if [ "$PARTITION_TABLE" == "gpt" ]; then
