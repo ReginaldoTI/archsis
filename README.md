@@ -8,6 +8,12 @@ or
 ### Cloning
 git clone https://github.com/luisantoniojr/archsis.git
 
+### Run
+
+After download, enter in directory name luisantoniojr-*
+
+Change setup file as your needs.
+
 *WARNING!!!* Check up setup file for all configurations! Otherwise you can lost your data!
 
 * AUTOMATIC_IP, determine fixed address.
@@ -15,10 +21,6 @@ git clone https://github.com/luisantoniojr/archsis.git
 * INSTALL_VIRTUALBOX, install virtualbox on host, not on guest system.
 * INSTALL_SAMBA, install and configure SAMBA.
 * INSTALL_DOCKER, install docker.
-
-### Run
-
-After download, enter in directory name luisantoniojr-*
 
 First run *./install*, to install arch O.S.
 

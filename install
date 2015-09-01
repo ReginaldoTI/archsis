@@ -135,7 +135,10 @@ swapon /dev/mapper/$SWAP
 mount /dev/mapper/$HOME $MOUNT_POINT/home
 
 # need for UEFI install
-arch_chroot "refind-install" # ???
+if [[ $UEFI -eq 1 ]]; then
+  arch_chroot "pacman -Syu refind-install --noconfirm" # ???
+  arch_chroot "refind-install" # ???
+fi
 
 # generate fstab based on mounted devices
 if [[ $UEFI -eq 0 ]]; then

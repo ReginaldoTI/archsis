@@ -252,8 +252,6 @@ install_samba(){
 
     # smbclient -L localhost –U user1 ???
 
-    pause_function
-  #fi
 }
 #}}}
 
@@ -267,8 +265,6 @@ echo ${KEYMAP}
 localectl set-locale LANG=${LOCALE_UTF8}
 localectl set-keymap ${KEYMAP}
 localectl set-x11-keymap ${X11KEYMAP}
-
-pause_function
 
 # wired and wireless
 setup_connection

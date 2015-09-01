@@ -170,7 +170,7 @@ setup_connection() { #{{{
     systemctl start dhcpcd@${CONNECTION_DEVICE}.service
     # setup_alt_dns
   fi
-  pause_function
+  # pause_function
 }
 
 #MIRRORLIST {{{
