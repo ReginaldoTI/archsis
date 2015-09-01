@@ -487,15 +487,15 @@ fi
 
 # Always uncheck save session for future logins
 xfconf-query -c xfce4-session -p /general/SaveOnExit -n -t bool -s false
-
 # change icon
 xfconf-query -c xsettings -p /Net/IconThemeName -s Faenza-Ambiance
-
-# change theme
+# settings -> windows manager -> style
 xfconf-query -c xfwm4 -p /general/theme -s Numix
+# settings -> appearance - style
 xfconf-query -c xsettings -p /Net/ThemeName -s Numix
-
 # change workspace numbers
 xfconf-query -c xfwm4 -p /general/workspace_count -s 1
+# change clock format
+xfconf-query -c xfce4-panel -p /plugins/plugin-5/digital-format -s "%R%n<span size='x-small'>%d-%m %Y</span>"
 
 # reboot
