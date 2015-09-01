@@ -475,8 +475,24 @@ if [ AUTHENTICATE_ON_SERVER==true ]; then
   sudo net rpc join -U ${USER_DOMAIN}
 fi
 
-# customize
+# [customize]
+# List the channels:
+# xfconf-query -l
+# List all of the properties and values of a channel:
+# xfconf-query -c <CHANNEL> -lv
+# Create a new property:
+# xfconf-query -c <CHANNEL> -p <PROPERTY> -n -t <TYPE> -s <VALUE>
+# Change an existing property (same as previous but without the -n):
+# xfconf-query -c <CHANNEL> -p <PROPERTY> -s <VALUE>
+
 # Always uncheck save session for future logins
 xfconf-query -c xfce4-session -p /general/SaveOnExit -n -t bool -s false
+
+# change icon
+xfconf-query -c xsettings -p /Net/IconThemeName -s Faenza-Ambiance
+
+# change theme
+xfconf-query -c xfwm4 -p /general/theme -s Numix
+xfconf-query -c xsettings -p /Net/ThemeName -s Numix
 
 # reboot
