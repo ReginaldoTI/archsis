@@ -475,4 +475,8 @@ if [ AUTHENTICATE_ON_SERVER==true ]; then
   sudo net rpc join -U ${USER_DOMAIN}
 fi
 
+# customize
+# Always uncheck save session for future logins
+xfconf-query -c xfce4-session -p /general/SaveOnExit -n -t bool -s false
+
 # reboot
