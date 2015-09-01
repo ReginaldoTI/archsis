@@ -1,34 +1,94 @@
 #!/bin/bash
 
-# DO NOT USE - or _ in names
+# DO NOT USE - or _ in names <<< ATTENTION!!!
 
-# vars
-DEVICE="/dev/sda"
-MBR_MOUNT_POINT="/dev/sda"
-BOOT_MOUNT_POINT="/dev/sda1"
-ROOT_MOUNT_POINT="/dev/sda2"
-CRYPT_NAME="cryptsystem"
+########################
+# variables            #
+# change as your needs #
+########################
+DEVICE="/dev/sda" # principal device
+MBR_MOUNT_POINT="/dev/sda" # where to install your MBR
+BOOT_MOUNT_POINT="/dev/sda1" # where your boot will be installed
+ROOT_MOUNT_POINT="/dev/sda2" # where your root will be installed
+CRYPT_NAME="cryptsystem" # 
 VG_CREATE_NAME="vgsystem"
-HOST_NAME="REIT-INF06x"
-MOUNT_POINT="/mnt"
-USER_NAME="luis"
-USER_GROUP="users"
-USER_GROUP_EXTRA="wheel,storage,power,network"
-username=${USER_NAME}
-EDITOR="nano"
+HOST_NAME="REIT-INF06" # used by host file and samba
+MOUNT_POINT="/mnt" # used by chroot
+USER_NAME="luis" # user name
+EDITOR="nano" # used
 LOCALE_UTF8="en_US.UTF-8" # pt_BR.UTF8
 LOCALE="en_US" # or pt_BR
 ARCHI=`uname -m` # ARCHITECTURE
 LOCAL_TIME=true
+GIT_ACCOUNT="luisantoniojr"
+
+# "Australia" "Austria" "Belarus" "Belgium" "Brazil" "Bulgaria" "Canada" "Chile" "China" "Colombia" "Czech Republic" "Denmark" "Estonia" "Finland" "France" "Germany" "Greece" "Hungary" "India" "Ireland" "Israel" "Italy" "Japan" "Kazakhstan" "Korea" "Latvia" "Luxembourg" "Macedonia" "Netherlands" "New Caledonia" "New Zealand" "Norway" "Poland" "Portugal" "Romania" "Russian" "Serbia" "Singapore" "Slovakia" "South Africa" "Spain" "Sri Lanka" "Sweden" "Switzerland" "Taiwan" "Turkey" "Ukraine" "United Kingdom" "United States" "Uzbekistan" "Viet Nam")
+# OPTIONS ["AU" "AT" "BY" "BE" "BR" "BG" "CA" "CL" "CN" "CO" "CZ" "DK" "EE" "FI" "FR" "DE" "GR" "HU" "IN" "IE" "IL" "IT" "JP" "KZ" "KR" "LV" "LU" "MK" "NL" "NC" "NZ" "NO" "PL" "PT" "RO" "RU" "RS" "SG" "SK" "ZA" "ES" "LK" "SE" "CH" "TW" "TR" "UA" "GB" "US" "UZ" "VN"]
+CONTRY_CODE="BR"
+
+# OPTIONS [br-abnt | us | us-acentos]
+KEYMAP="br-abnt2"
+
+# OPTIONS [br | us]
+X11KEYMAP="br"
 
 # define setup install
-INSTALL_DOCKER=false
+INSTALL_DOCKER=false # install docker
+INSTALL_VIRTUALBOX=false # install virtualbox
+INSTALL_CUPS=true # install cups / print
 
-# important vars
-WIRED_DEV=`ip link | grep "eno\|enp" | awk '{print $2}'| sed 's/://' | sed '1!d'`
-WIRELESS_DEV=`ip link | grep wlp | awk '{print $2}'| sed 's/://' | sed '1!d'`
+############################################################### 
+# use only if you want your home directory separate from root #
+###############################################################
+SEPARATE_HOME=false # important
+#
+HOME_DEVICE="/dev/sdb"
+HOME_ROOT_MOUNT_POINT="/dev/sdb1"
+HOME_CRYPT_NAME="crypthome"
+HOME_VG_CREATE_NAME="vghome"
+KEYFILE=true # use keyfile, if not, you will need to insert twice passwords, one for each encrypted device
+KEYFILE_NAME="/root/home_key_file"
+
+################################
+# automatic ip, gatewy and dns #
+################################
+AUTOMATIC_IP=false # important
+#
+CONNECTION_NAME="unifemm" # for network manager name
+IP_ADDR="172.16.0.152"
+SUBMASK="255.255.240.0"
+CIDR="/20"
+GATEWAY="172.16.0.32"
+NAMESERVER="172.16.5.253" # can be blank
+DNS_SEARCH="campusunifemm.edu.br" # can be blank
+
+#########################
+# shared, install samba #
+#########################
+INSTALL_SAMBA=true # important
+#
+WORK_GROUP="CAMPUSUNIFEMM"
+USERSHARES_DIR="/var/lib/samba/usershare" # don't change this
+USERSHARES_GROUP="sambashare" # don't change this
+SHARED_NAME="shared" # this folder will be create for share files with others users
+SHARED_COMMENT=$HOST_NAME # used by samba
+NETBIOS_NAME=$HOST_NAME # used by samba
+DNS_IP="172.16.5.253"
+DNS_NAME="campusunifemm.edu.br"
+REALM=$DNS_NAME # used by samba
+USER_DOMAIN="002108" # used by samba
+AUTHENTICATE_ON_SERVER=false # experimental
+
+##########################################
+# DON'T change anything below this point #
+##########################################
+
+username=${USER_NAME}
+USER_GROUP="users" # group
+USER_GROUP_EXTRA="wheel,storage,power,network" # importante groups used by user
+
+# detect msdos/gpt|efi
 PARTITION_TABLE=$(parted $DEVICE print | grep "Partition Table" | awk '{print $3;}')
-
 if [ "$PARTITION_TABLE" == "gpt" ]; then
   GPT_PARTITION_NUMBER="6" # BIOS_BOOT
   BOOT_MOUNT_POINT="/dev/sda2" # EFI System
@@ -36,74 +96,18 @@ if [ "$PARTITION_TABLE" == "gpt" ]; then
   EFI_BOOT_MOUNT_POINT="/boot/efi"
 fi
 
-# "AU" "AT" "BY" "BE" "BR" "BG" "CA" "CL" "CN" "CO" "CZ" "DK" "EE" "FI" "FR" "DE" "GR" "HU" "IN" "IE" "IL" "IT" "JP" "KZ" "KR" "LV" "LU" "MK" "NL" "NC" "NZ" "NO" "PL" "PT" "RO" "RU" "RS" "SG" "SK" "ZA" "ES" "LK" "SE" "CH" "TW" "TR" "UA" "GB" "US" "UZ" "VN")
-# "Australia" "Austria" "Belarus" "Belgium" "Brazil" "Bulgaria" "Canada" "Chile" "China" "Colombia" "Czech Republic" "Denmark" "Estonia" "Finland" "France" "Germany" "Greece" "Hungary" "India" "Ireland" "Israel" "Italy" "Japan" "Kazakhstan" "Korea" "Latvia" "Luxembourg" "Macedonia" "Netherlands" "New Caledonia" "New Zealand" "Norway" "Poland" "Portugal" "Romania" "Russian" "Serbia" "Singapore" "Slovakia" "South Africa" "Spain" "Sri Lanka" "Sweden" "Switzerland" "Taiwan" "Turkey" "Ukraine" "United Kingdom" "United States" "Uzbekistan" "Viet Nam")
-CONTRY_CODE="BR"
+# detecting connection
+WIRED_DEV=`ip link | grep "eno\|enp\|eth" | awk '{print $2}'| sed 's/://' | sed '1!d'`
+WIRELESS_DEV=`ip link | grep wlp | awk '{print $2}'| sed 's/://' | sed '1!d'`
 
-# load keymap keyboard
-KEYMAP="br-abnt2" #br-abnt or us or us-acentos
-X11KEYMAP="br" #br or us
-
-# automatic ip, gatewy and dns
-WIRED=true
-WIRELESS=false
-AUTOMATIC_IP=false
-
-if [ $WIRED==true ]; then
+# if you have wired and wireless connection, default will be wired
+if [ ! -z $WIRED_DEV ]; then
 	CONNECTION_DEVICE=$WIRED_DEV
-else
-	if [ $WIRELESS==true ]; then
-		CONNECTION_DEVICE=$WIRELESS_DEV
-	fi
+elif [ ! -z $WIRELESS_DEV ]; then
+  CONNECTION_DEVICE=$WIRELESS_DEV
 fi
 
-if [ $AUTOMATIC_IP==false ]; then
-	CONNECTION_NAME="unifemm" # for network manager name
-	IP_ADDR="172.16.0.152" # 54
-	SUBMASK="255.255.240.0"
-	CIDR="/20"
-	GATEWAY="172.16.0.32"
-	NAMESERVER="172.16.5.253"
-	DNS_SEARCH="campusunifemm.edu.br"
-fi
-
-# for separated home directory
-SEPARATE_HOME=true
-if [ $SEPARATE_HOME==true ]; then
-	HOME_DEVICE="/dev/sdb"
-	HOME_ROOT_MOUNT_POINT="/dev/sdb1"
-	HOME_CRYPT_NAME="crypthome"
-	HOME_VG_CREATE_NAME="vghome"
-
-	# use keyfile
-	KEYFILE=true
-	KEYFILE_NAME="/root/home_key_file"
-fi
-
-## install
-
-# install virtualbox
-INSTALL_VIRTUALBOX=false
-
-# install cups
-INSTALL_CUPS=true
-
-# shared, install samba
-INSTALL_SAMBA=true
-if [ $INSTALL_SAMBA==true ]; then
-
-	AUTHENTICATE_ON_SERVER=false
-
-	WORK_GROUP="CAMPUSUNIFEMM"
-	USERSHARES_DIR="/var/lib/samba/usershare"
-	USERSHARES_GROUP="sambashare"
-	#PUBLIC_DIRECTORY="Public"
-	#SHARED_DIRECTORY=/home/${USER_NAME}/${PUBLIC_DIRECTORY}
-	SHARED_NAME="shared"
-	SHARED_COMMENT=$HOST_NAME
-	NETBIOS_NAME=$HOST_NAME
-	DNS_IP="172.16.5.253"
-	DNS_NAME="campusunifemm.edu.br"
-	REALM=$DNS_NAME
-	USER_DOMAIN="002108"
+# setting default
+if [ ! -z $WIRED_DEV ] && [ ! -z $WIRELESS_DEV ]; then
+  CONNECTION_DEVICE=$WIRED_DEV
 fi

@@ -2,11 +2,20 @@
 
 # You can sed "s/$1/pitt/g" or sed 's/'$1'/pitt/g'
 
-echo $1 $2
+# echo $1 $2
 
-FIRST=$(echo $1 | sed "s/[A-Z/a-z/,.]*//g")
-SECOND=$(echo $2 | sed "s/[A-Z/a-z/,.]//g")
-RESULT=$(($FIRST+$SECOND))
-echo $FIRST "+" $SECOND "=" $RESULT
+# FIRST=$(echo $1 | sed "s/[A-Z/a-z/,.]*//g")
+# SECOND=$(echo $2 | sed "s/[A-Z/a-z/,.]//g")
+# RESULT=$(($FIRST+$SECOND))
+# echo $FIRST "+" $SECOND "=" $RESULT
+
+DNS_SEARCH=""
+IP="IP"
+
+[ ! -z $DNS_SEARCH ] && echo $DNS_SEARCH
+
+if [ ! -z $DNS_SEARCH ] && [ ! -z $IP ]; then
+  echo $IP
+fi
 
 exit 0

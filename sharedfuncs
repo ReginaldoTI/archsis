@@ -155,17 +155,15 @@ setup_connection() { #{{{
   echo "wired:" $WIRED_DEV
   echo "wireless:" $WIRELESS_DEV
 
-  if [ $AUTOMATIC_IP != true ]; then
+  if [ $AUTOMATIC_IP == false ] && [ ! -z $CONNECTION_DEVICE ]; then
     systemctl stop dhcpcd@${CONNECTION_DEVICE}.service
     ip link set ${CONNECTION_DEVICE} down
     ip link set ${CONNECTION_DEVICE} up
     ip addr add ${IP_ADDR}/${SUBMASK} dev ${CONNECTION_DEVICE}
     ip route add default via ${GATEWAY}
 
-    echo "nameserver ${NAMESERVER}" >> /etc/resolv.conf
-    if [ ! -z $DNS_SEARCH ] ; then
-      echo "search ${DNS_SEARCH}" >> /etc/resolv.conf
-    fi
+    [ ! -z $NAMESERVER ] && echo "nameserver ${NAMESERVER}" >> /etc/resolv.conf
+    [ ! -z $DNS_SEARCH ] && echo "search ${DNS_SEARCH}" >> /etc/resolv.conf
 
     # $EDITOR /etc/resolv.conf
   else
