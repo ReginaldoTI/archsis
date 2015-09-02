@@ -38,6 +38,8 @@ Enter in directory luisantoniojr-* and run *sudo ./install_programs* to install 
 [http://www.linuxveda.com/2015/04/20/arch-linux-tutorial-manual/](http://www.linuxveda.com/2015/04/20/arch-linux-tutorial-manual/)
 
 [http://www.evolutionlinux.com/](http://www.evolutionlinux.com/)
+[http://sourceforge.net/projects/evolutionlinux/](http://sourceforge.net/projects/evolutionlinux/)
+[https://github.com/EvoLutionLinux](https://github.com/EvoLutionLinux)
 
 [https://wiki.debian.org/DebianInstaller/GUI](https://wiki.debian.org/DebianInstaller/GUI)
 

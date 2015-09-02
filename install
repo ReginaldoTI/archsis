@@ -83,7 +83,7 @@ if [ $SEPARATE_HOME == true ]; then
 fi
 
 # create lvm for /"root", swap and home
-if [ $SEPARATE_HOME != true ]; then
+if [ $SEPARATE_HOME == false ]; then
 	# system and home
 	pvcreate /dev/mapper/$CRYPT_NAME
 	vgcreate $VG_CREATE_NAME /dev/mapper/$CRYPT_NAME
@@ -156,8 +156,8 @@ arch_chroot "sed -i '/127.0.0.1/s/$/ '${HOST_NAME}'/' /etc/hosts"
 arch_chroot "sed -i '/::1/s/$/ '${HOST_NAME}'/' /etc/hosts"
 
 # modify hostname base on samba config
-if [ $INSTALL_SAMBA==true ]; then
-	if [ $AUTHENTICATE_ON_SERVER==true ]; then
+if [ $INSTALL_SAMBA == true ]; then
+	if [ $AUTHENTICATE_ON_SERVER == true ]; then
 		arch_chroot "sed -i -e '\$a'${DNS_IP}' '${NETBIOS_NAME}'.'${DNS_NAME}' '${NETBIOS_NAME}'' /etc/hosts"
 	fi
 fi
@@ -167,11 +167,11 @@ arch_chroot "locale-gen en_US en_US.UTF-8 pt_BR pt_BR.UTF-8"
 sed -i '/en_US/s/^#//' ${MOUNT_POINT}/etc/locale.gen
 sed -i '/pt_BR/s/^#//' ${MOUNT_POINT}/etc/locale.gen
 arch_chroot locale-gen
-arch_chroot "export LANG='${LOCALE_UTF8}'"
+arch_chroot "export LANG=${LOCALE_UTF8}"
 
 # timezone
 arch_chroot "ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime"
-if [ $LOCAL_TIME==true ]; then
+if [ $LOCAL_TIME == true ]; then
 	arch_chroot "hwclock --systohc --localtime"
 else
 	arch_chroot "hwclock --systohc --utc"

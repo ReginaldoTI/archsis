@@ -216,7 +216,7 @@ install_samba(){
       sed -i 's|workgroup = MYGROUP|workgroup = '${WORK_GROUP}'\n|' /etc/samba/smb.conf
       sed -i -e '/\[global\]/a\\n   usershare path = /var/lib/samba/usershare\n   usershare max shares = 100\n   usershare allow guests = yes\n   usershare owner only = False\n   netbios name = '${NETBIOS_NAME}'\n' /etc/samba/smb.conf
       sed -i -e '/\[global\]/a\\n   socket options = IPTOS_LOWDELAY TCP_NODELAY SO_KEEPALIVE\n   write cache size = 2097152\n   use sendfile = yes\n' /etc/samba/smb.conf
-      if [ $AUTHENTICATE_ON_SERVER==true ]; then # ???
+      if [ $AUTHENTICATE_ON_DOMAIN = =  true ]; then # ???
         sed -i -e '/\[global\]/a\\n   realm = '${REALM}'\n   winbind separator = \\\n   winbind use default domain = yes\n   winbind enum users  = yes\n   winbind enum groups = yes\n' /etc/samba/smb.conf
         sed -i "s|security = user|security = ads|" /etc/samba/smb.conf
         sed -i "s|;  encrypt passwords|encrypt passwords|" /etc/samba/smb.conf
@@ -245,7 +245,7 @@ install_samba(){
     # enable services
     system_ctl enable smbd && system_ctl start smbd
     system_ctl enable nmbd && system_ctl start nmbd
-    if [ $AUTHENTICATE_ON_SERVER==true ]; then
+    if [ $AUTHENTICATE_ON_DOMAIN == true ]; then
       system_ctl enable winbindd && system_ctl start winbindd
     fi
 
@@ -299,7 +299,7 @@ system_ctl start NetworkManager
 # https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Networking_Guide/sec-Using_the_NetworkManager_Command_Line_Tool_nmcli.html
 # https://fedoraproject.org/wiki/Networking/CLI
 # http://cgit.freedesktop.org/NetworkManager/NetworkManager/plain/man/nmcli-examples.xml
-if [ $AUTOMATIC_IP==false ]; then
+if [ $AUTOMATIC_IP == false ]; then
   echo "Setup networking manager on: ${CONNECTION_DEVICE}"
   nmcli con add type ethernet con-name $CONNECTION_NAME ifname $CONNECTION_DEVICE ip4 $IP_ADDR$CIDR gw4 $GATEWAY
   nmcli con mod $CONNECTION_NAME ipv4.dns $NAMESERVER # +ipv4.dns to add
@@ -428,19 +428,19 @@ system_ctl enable freshclamd
 package_install openssh
 system_ctl enable sshd
 
-if [ $INSTALL_VIRTUALBOX==true ]; then
+if [ $INSTALL_VIRTUALBOX == true ]; then
   install_virtualbox
 fi
 
-if [ $INSTALL_SAMBA==true ]; then
+if [ $INSTALL_SAMBA == true ]; then
   install_samba
 fi
 
-if [ $INSTALL_CUPS==true ]; then
+if [ $INSTALL_CUPS == true ]; then
   install_cups
 fi
 
-if [ $INSTALL_DOCKER==true ]; then
+if [ $INSTALL_DOCKER == true ]; then
   package_install "docker"
   gpasswd -a ${USER_NAME} docker
   system_ctl enable docker
@@ -461,7 +461,7 @@ sed -i '/%wheel ALL=(ALL) NOPASSWD: ALL/s/^/#/' /etc/sudoers
 rm -R /var/lib/pacman/sync
 pacman -Syu
 
-if [ AUTHENTICATE_ON_SERVER==true ]; then
+if [ $AUTHENTICATE_ON_DOMAIN == true ]; then
   sudo net rpc join -U ${USER_DOMAIN}
 fi
 
@@ -477,17 +477,17 @@ fi
 # Change an existing property (same as previous but without the -n):
 # xfconf-query -c <CHANNEL> -p <PROPERTY> -s <VALUE>
 
-# Always uncheck save session for future logins
-xfconf-query -c xfce4-session -p /general/SaveOnExit -n -t bool -s false
-# change icon
-xfconf-query -c xsettings -p /Net/IconThemeName -s Faenza-Ambiance
-# settings -> windows manager -> style
-xfconf-query -c xfwm4 -p /general/theme -s Numix
-# settings -> appearance - style
-xfconf-query -c xsettings -p /Net/ThemeName -s Numix
-# change workspace numbers
-xfconf-query -c xfwm4 -p /general/workspace_count -s 1
-# change clock format
-xfconf-query -c xfce4-panel -p /plugins/plugin-5/digital-format -s "%R%n<span size='x-small'>%d-%m %Y</span>"
+# # Always uncheck save session for future logins
+# xfconf-query -c xfce4-session -p /general/SaveOnExit -n -t bool -s false
+# # change icon
+# xfconf-query -c xsettings -p /Net/IconThemeName -s Faenza-Ambiance
+# # settings -> windows manager -> style
+# xfconf-query -c xfwm4 -p /general/theme -s Numix
+# # settings -> appearance - style
+# xfconf-query -c xsettings -p /Net/ThemeName -s Numix
+# # change workspace numbers
+# xfconf-query -c xfwm4 -p /general/workspace_count -s 1
+# # change clock format
+# xfconf-query -c xfce4-panel -p /plugins/plugin-5/digital-format -s "%R%n<span size='x-small'>%d-%m %Y</span>"
 
 # reboot

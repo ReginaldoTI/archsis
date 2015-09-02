@@ -12,10 +12,16 @@
 DNS_SEARCH=""
 IP="IP"
 
+TESTE=false
+
 [ ! -z $DNS_SEARCH ] && echo $DNS_SEARCH
 
 if [ ! -z $DNS_SEARCH ] && [ ! -z $IP ]; then
   echo $IP
+fi
+
+if [ $TESTE == true ]; then
+	echo merda
 fi
 
 exit 0
