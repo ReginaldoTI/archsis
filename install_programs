@@ -190,7 +190,7 @@ install_samba(){
       mkdir -p ${USERSHARES_DIR}
       groupadd ${USERSHARES_GROUP}
       chown root:${USERSHARES_GROUP} ${USERSHARES_DIR}
-      chmod 1770 ${USERSHARES_DIR}
+      chmod 01770 ${USERSHARES_DIR}
 
       # delete desnecessary lines
       sed -i "\|printcap name = \/etc\/printcap|d" /etc/samba/smb.conf
