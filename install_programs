@@ -456,7 +456,7 @@ fi
 # aur_package_install "visual-studio-code"
 
 # turn off, more secure
-sed -i '/%wheel ALL=(ALL) NOPASSWD: ALL/s/^/#/' ${MOUNT_POINT}/etc/sudoers
+sed -i '/%wheel ALL=(ALL) NOPASSWD: ALL/s/^/#/' /etc/sudoers
 
 rm -R /var/lib/pacman/sync
 pacman -Syu
