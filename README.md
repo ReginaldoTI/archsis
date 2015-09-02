@@ -46,3 +46,6 @@ Enter in directory luisantoniojr-* and run *sudo ./install_programs* to install 
 [https://projects.archlinux.org/archboot.git/](https://projects.archlinux.org/archboot.git/)
 
 [https://wiki.archlinux.org/index.php/Archiso](https://wiki.archlinux.org/index.php/Archiso)
+
+#### TODO
+xdg-user-dirs-gtk -> run xdg-user-dirs-update will Creates user dirs and asks to relocalize them

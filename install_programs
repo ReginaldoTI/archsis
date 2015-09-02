@@ -448,12 +448,12 @@ if [ $INSTALL_DOCKER==true ]; then
 fi
 
 # aur
-aur_package_install "libgee06"
-aur_package_install "gnome-encfs-manager" # libgee06 as dependency
-aur_package_install "dropbox"
-aur_package_install "sublime-text-dev"
-aur_package_install "atom-editor"
-aur_package_install "visual-studio-code"
+# aur_package_install "libgee06"
+# aur_package_install "gnome-encfs-manager" # libgee06 as dependency
+# aur_package_install "dropbox"
+# aur_package_install "sublime-text-dev"
+# aur_package_install "atom-editor"
+# aur_package_install "visual-studio-code"
 
 # turn off, more secure
 sed -i '/%wheel ALL=(ALL) NOPASSWD: ALL/s/^/#/' ${MOUNT_POINT}/etc/sudoers
