@@ -87,20 +87,20 @@ if [ $SEPARATE_HOME == false ]; then
 	# system and home
 	pvcreate /dev/mapper/$CRYPT_NAME
 	vgcreate $VG_CREATE_NAME /dev/mapper/$CRYPT_NAME
-	lvcreate -L 25GB -n root $VG_CREATE_NAME
-	lvcreate -L 8GB -n swap $VG_CREATE_NAME
-  	lvcreate -l 100%FREE -n home $VG_CREATE_NAME
+	lvcreate -L $ROOT_SIZE -n root $VG_CREATE_NAME
+	lvcreate -L $SWAP_SIZE -n swap $VG_CREATE_NAME
+  	lvcreate -l $HOME_SIZE -n home $VG_CREATE_NAME
 else # $SEPARATE_HOME == true
 	# system
 	pvcreate /dev/mapper/$CRYPT_NAME
 	vgcreate $VG_CREATE_NAME /dev/mapper/$CRYPT_NAME
-	lvcreate -L 8GB -n swap $VG_CREATE_NAME
-  	lvcreate -l 100%FREE -n root $VG_CREATE_NAME
+	lvcreate -L $SWAP_SIZE -n swap $VG_CREATE_NAME
+  	lvcreate -l $HOME_SIZE -n root $VG_CREATE_NAME
 
   	# home
 	pvcreate /dev/mapper/$HOME_CRYPT_NAME
 	vgcreate $HOME_VG_CREATE_NAME /dev/mapper/$HOME_CRYPT_NAME
-	lvcreate -l 100%FREE -n home $HOME_VG_CREATE_NAME
+	lvcreate -l $HOME_SIZE -n home $HOME_VG_CREATE_NAME
 fi
 
 # LVM names
