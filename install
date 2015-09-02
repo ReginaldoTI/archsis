@@ -32,11 +32,11 @@ if [[ $UEFI -eq 0 ]]; then
   	## create msdos disk
   	parted -s $DEVICE mklabel msdos
   	## first device is boot
-  	parted -s $DEVICE mkpart primary ext2 1M 256M
+  	parted -s $DEVICE mkpart primary ext2 1M $BOOT_SIZE
   	partprobe $DEVICE ## tell kernel we have a new partition table
   	parted -s $DEVICE set 1 boot on ## make partition active (bootable)
   	## second device 
-  	parted -s $DEVICE mkpart primary ext4 256M 100%
+  	parted -s $DEVICE mkpart primary ext4 $BOOT_SIZE 100%
   	partprobe $DEVICE ## tell kernel we have a new partition table
   fi
 elif [[ $UEFI -eq 1 ]]; then ## GPT
