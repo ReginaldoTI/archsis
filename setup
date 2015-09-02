@@ -70,6 +70,7 @@ INSTALL_SAMBA=true # important
 WORK_GROUP="CAMPUSUNIFEMM"
 USERSHARES_DIR="/var/lib/samba/usershare" # don't change this
 USERSHARES_GROUP="sambashare" # don't change this
+USERSHARES_PATH="/home/%u/Public" # don't change this
 SHARED_NAME="shared" # this folder will be create for share files with others users
 SHARED_COMMENT=$HOST_NAME # used by samba
 NETBIOS_NAME=$HOST_NAME # used by samba

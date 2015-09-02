@@ -187,10 +187,13 @@ install_samba(){
       # export USERSHARES_GROUP="sambashare"
       export USERSHARES_DIR
       export USERSHARES_GROUP
-      mkdir -p ${USERSHARES_DIR}
+      mkdir -p ${USERSHARES_DIR} # used by net usershare add <>...
       groupadd ${USERSHARES_GROUP}
       chown root:${USERSHARES_GROUP} ${USERSHARES_DIR}
       chmod 01770 ${USERSHARES_DIR}
+
+      mkdir -p ${USERSHARES_PATH} # used by smb.conf
+      chown ${USER_NAME}:${USER_GROUP} ${USERSHARES_PATH} # used by smb.conf
 
       # delete desnecessary lines
       sed -i "\|printcap name = \/etc\/printcap|d" /etc/samba/smb.conf
@@ -209,7 +212,7 @@ install_samba(){
       sed -i "\|writable = no|d" /etc/samba/smb.conf
       sed -i "\|printable = yes|d" /etc/samba/smb.conf
 
-      sed -i "s|Samba Server|${HOST_NAME}|" /etc/samba/smb.conf
+      sed -i "s|Samba Server|${HOST_NAME}|" /etc/samba/smb.conf # %h
 
       sed -i 's|; name resolve order = wins lmhosts bcast| name resolve order = bcast lmhosts host wins|'
 
@@ -226,7 +229,7 @@ install_samba(){
       fi
 
       # share settings
-      sed -i -e "\$a\[${SHARED_NAME}\]\n  comment = ${SHARED_COMMENT}\n  path = ${USERSHARES_DIR}\n  writeable = yes\n  browseable = yes\n  guest ok = yes\n" /etc/samba/smb.conf
+      sed -i -e "\$a\[${SHARED_NAME}\]\n  comment = ${SHARED_COMMENT}\n  path = ${USERSHARES_PATH}\n  writeable = yes\n  browseable = yes\n  guest ok = yes\n" /etc/samba/smb.conf
 
       # echo '['${SHARED_NAME}']\n comment = '${SHARED_COMMENT}'\n path = '${SHARED_DIRECTORY}'\n writeable = yes\n browseable = yes\n guest ok = yes\n' >>  /etc/samba/smb.conf
       usermod -a -G ${USERSHARES_GROUP} ${username}
