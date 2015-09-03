@@ -90,7 +90,9 @@ USER_DOMAIN="002108" # used by samba
 AUTHENTICATE_ON_DOMAIN=false # experimental
 
 ##########################################
+##########################################
 # DON'T change anything below this point #
+##########################################
 ##########################################
 
 username=${USER_NAME}
