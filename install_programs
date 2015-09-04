@@ -468,6 +468,12 @@ if [ $AUTHENTICATE_ON_DOMAIN == true ]; then
   sudo net rpc join -U ${USER_DOMAIN}
 fi
 
+#############
+# developer #
+#############
+
+package_install "nodejs npm"
+
 ##############
 # [customize]#
 ##############
