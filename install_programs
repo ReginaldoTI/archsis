@@ -465,6 +465,11 @@ fi
 # aur_package_install "atom-editor"
 # aur_package_install "visual-studio-code"
 
+# install all video drivers for run on any desktop/laptop
+if [[ $INSTALL_ON_PENDRIVE == true ]]; then
+  package_install "xf86-video-vesa xf86-video-ati xf86-video-intel xf86-video-nouveau"
+fi
+
 # turn off, more secure
 sed -i '/%wheel ALL=(ALL) NOPASSWD: ALL/s/^/#/' /etc/sudoers
 
