@@ -142,10 +142,12 @@ if [[ $UEFI -eq 1 ]]; then
 fi
 
 # generate fstab based on mounted devices
-if [[ $UEFI -eq 0 ]]; then
-	genfstab -p $MOUNT_POINT >> $MOUNT_POINT/etc/fstab # not use -U, is for UUID
+if [[ $INSTALL_ON_PENDRIVE == true ]]; then
+  genfstab -pU $MOUNT_POINT >> $MOUNT_POINT/etc/fstab
+elif [[ $UEFI -eq 0 ]]; then
+  genfstab -p $MOUNT_POINT >> $MOUNT_POINT/etc/fstab # not use -U, is for UUID
 else
-	genfstab -t PARTUUID -p $MOUNT_POINT >> $MOUNT_POINT/etc/fstab
+  genfstab -t PARTUUID -p $MOUNT_POINT >> $MOUNT_POINT/etc/fstab
 fi
 
 # hostname
@@ -183,14 +185,14 @@ arch_chroot "pacman -Syu grub grub-bios os-prober parted --noconfirm"
 # setup grub default
 sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet"/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash video=vesa:off"/' ${MOUNT_POINT}/etc/default/grub
 sed -i 's|GRUB_CMDLINE_LINUX=""|GRUB_CMDLINE_LINUX="cryptdevice='${ROOT_MOUNT_POINT}':'${VG_CREATE_NAME}'"|' ${MOUNT_POINT}/etc/default/grub
-sed -i "/#GRUB_DISABLE_LINUX_UUID=true/s/^#//" ${MOUNT_POINT}/etc/default/grub
+[[ $INSTALL_ON_PENDRIVE == false ]] && sed -i "/#GRUB_DISABLE_LINUX_UUID=true/s/^#//" ${MOUNT_POINT}/etc/default/grub
 echo "GRUB_DISABLE_SUBMENU=y" >> ${MOUNT_POINT}/etc/default/grub
 
 # setup mkinitcpio
 # HOOKS="base udev autodetect modconf block filesystems keyboard fsck"
 sed -i '/^HOOK/s/block/block keymap encrypt lvm2/' ${MOUNT_POINT}/etc/mkinitcpio.conf
 sed -i '/^HOOK/s/filesystems/filesystems shutdown/' ${MOUNT_POINT}/etc/mkinitcpio.conf
-if [ $INSTALL_ON_PENDRIVE==true ]; then
+if [ $INSTALL_ON_PENDRIVE == true ]; then
   sed -i '/^HOOK/s/block //' ${MOUNT_POINT}/etc/mkinitcpio.conf
   sed -i '/^HOOK/s/udev/udev block/' ${MOUNT_POINT}/etc/mkinitcpio.conf
 fi
@@ -201,7 +203,7 @@ arch_chroot "mkinitcpio -p linux"
 if [[ $UEFI -eq 1 ]]; then
   arch_chroot "grub-install --target=x86_64-efi --efi-directory=${EFI_BOOT_MOUNT_POINT} --bootloader-id=arch_grub --recheck"
 else
-  if [ $INSTALL_ON_PENDRIVE==true ]; then
+  if [ $INSTALL_ON_PENDRIVE == true ]; then
   	arch_chroot "grub-install --target=i386-pc --recheck '${MBR_MOUNT_POINT}' --force"
   else
     arch_chroot "grub-install --target=i386-pc --recheck '${MBR_MOUNT_POINT}'"
