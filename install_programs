@@ -383,6 +383,7 @@ package_install "skype"
 package_install "audacity"
 package_install "easytag"
 package_install "handbrake"
+package_install "gnome-calculator"
 
 # https://www.archlinux.org/packages/community/x86_64/plank/
 # package_install "plank"
