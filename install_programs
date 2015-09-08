@@ -349,6 +349,7 @@ system_ctl enable acpid
 
 # tools
 package_install "mc curl lynx wget terminator rsync rdesktop gparted htop encfs"
+package_install "xarchiver"
 
 # https://wiki.archlinux.org/index.php/Davfs
 package_install "davfs2"
@@ -359,10 +360,15 @@ package_install "xscreensaver"
 package_install "git gsfonts meld"
 package_install "gvfs gvfs-smb gvfs-nfs smbclient sshfs" # gnome-vfs # cifs-utils
 package_install "cherrytree"
-#package_install "vlc"
+
+# media player
+package_install "vlc"
 package_install "totem"
+package_install "parole"
 package_install "audacious audacious-plugins"
 package_install "banshee"
+
+package_install "filezilla"
 package_install "firefox firefox-i18n-$LOCALE_FF firefox-adblock-plus flashplugin"
 package_install "thunderbird thunderbird-i18n-$LOCALE_TB"
 package_install "chromium"
@@ -467,12 +473,6 @@ pacman -Syu
 if [ $AUTHENTICATE_ON_DOMAIN == true ]; then
   sudo net rpc join -U ${USER_DOMAIN}
 fi
-
-#############
-# developer #
-#############
-
-package_install "nodejs npm"
 
 ##############
 # [customize]#
