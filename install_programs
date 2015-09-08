@@ -355,7 +355,7 @@ package_install "xarchiver"
 package_install "davfs2"
 
 package_install "catfish"
-package_install "gedit"
+package_install "gedit gedit-plugins vte3"
 package_install "xscreensaver"
 package_install "git gsfonts meld"
 package_install "gvfs gvfs-smb gvfs-nfs smbclient sshfs" # gnome-vfs # cifs-utils
