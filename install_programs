@@ -338,6 +338,7 @@ is_package_installed "fuse" && add_module "fuse"
 
 echo "NFS - https://wiki.archlinux.org/index.php/Nfs"
 package_install  "nfs-utils"
+system_ctl mask nfs-blkmap.service # get out with warning boot message
 system_ctl enable rpcbind
 system_ctl enable nfs-client.target
 system_ctl enable remote-fs.target
