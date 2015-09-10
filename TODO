@@ -1,0 +1,22 @@
+
+# can't write into external drive, 
+
+mount
+/dev/mapper/luks-a280d7b5-9b05-431f-82cd-bed6efcf21ad on /run/media/luis/78518aca-1867-4185-953c-ae4b1f133c58 type ext4 (rw,nosuid,nodev,relatime,data=ordered,uhelper=udisks2)
+
+sdc                                             8:32   0 931.5G  0 disk  
+└─sdc1                                          8:33   0 931.5G  0 part  
+  └─luks-a280d7b5-9b05-431f-82cd-bed6efcf21ad 254:6    0 931.5G  0 crypt /run/media/luis/78518aca-1867-4185-953c-ae4b1f133c58
+  
+
+sudo mcedit /etc/polkit-1/rules.d/00-early-checks.rules
+
+/* Allow users in admin group to run GParted without authentication */
+polkit.addRule(function(action, subject) {
+    if (action.id == "org.archlinux.pkexec.gparted" &&
+        subject.isInGroup("wheel")) {
+        return polkit.Result.YES;
+    }
+});
+
+
