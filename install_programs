@@ -471,6 +471,9 @@ if [[ $INSTALL_ON_PENDRIVE == true ]]; then
   package_install "xf86-video-vesa xf86-video-ati xf86-video-intel xf86-video-nouveau"
 fi
 
+# Run thunar as deamon
+echo "thunar --daemon &" > /etc/xprofile
+
 # turn off, more secure
 sed -i '/%wheel ALL=(ALL) NOPASSWD: ALL/s/^/#/' /etc/sudoers
 
