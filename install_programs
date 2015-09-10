@@ -349,7 +349,8 @@ package_install "acpi acpid"
 system_ctl enable acpid
 
 # tools
-package_install "mc curl lynx wget terminator rsync rdesktop gparted htop encfs"
+package_install "mc curl lynx wget terminator rdesktop gparted htop encfs"
+package_install "rsync grsync"
 package_install "xarchiver"
 
 # https://wiki.archlinux.org/index.php/Davfs
