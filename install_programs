@@ -195,6 +195,9 @@ install_samba(){
       mkdir -p ${USERSHARES_PATH} # used by smb.conf
       chown ${USER_NAME}:${USER_GROUP} ${USERSHARES_PATH} # used by smb.conf
 
+      # smbd -i - invalid permissions on directory '/var/cache/samba/msg': has 0700 should be 0755
+      chmod 0755 /var/cache/samba/msg
+
       # delete desnecessary lines
       sed -i "\|printcap name = \/etc\/printcap|d" /etc/samba/smb.conf
       sed -i "\|load printers = yes|d" /etc/samba/smb.conf
