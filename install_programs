@@ -429,16 +429,20 @@ package_install "libmythes mythes mythes-$LOCALE_MT"
 # 3G modem
 package_install "usbutils usb_modeswitch modemmanager"
 
-# clamav
+# clamav # freshclam
 package_install clamav
 cp /etc/clamav/clamd.conf.sample /etc/clamav/clamd.conf
 cp /etc/clamav/freshclam.conf.sample /etc/clamav/freshclam.conf
 sed -i '/Example/d' /etc/clamav/freshclam.conf
 sed -i '/Example/d' /etc/clamav/clamd.conf
 sed -i 's/#TCPSocket/TCPSocket/' /etc/clamav/clamd.conf
+sed -i '/DatabaseDirectory/s/^#//' /etc/clamav/clamd.conf
+sed -i '/DatabaseDirectory/s/^#//' /etc/clamav/freshclam.conf
+# clamd.service: PID file /run/clamav/clamd.pid not readable (yet?) after start: No such file or directory
+touch /run/clamav/clamd.pid
+# chown luis:users /var/lib/clamav & chmod 755 /var/lib/clamav ???
 system_ctl enable clamd
 system_ctl enable freshclamd
-# freshclam
 
 # ssh
 package_install openssh
