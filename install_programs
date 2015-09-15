@@ -355,6 +355,7 @@ system_ctl enable acpid
 package_install "mc curl lynx wget terminator rdesktop gparted htop encfs"
 package_install "rsync grsync"
 package_install "file-roller"
+package_install "gnome-disk-utility"
 
 # https://wiki.archlinux.org/index.php/Davfs
 package_install "davfs2"
