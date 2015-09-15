@@ -375,6 +375,7 @@ package_install "cherrytree"
 package_install "vlc"
 package_install "totem"
 package_install "parole"
+package_install "smplayer" # gui for mplayer
 package_install "audacious audacious-plugins"
 package_install "banshee"
 
