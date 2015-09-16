@@ -96,14 +96,14 @@ fi
 
 # functions
 
-# setup_alt_dns(){
-#   cat <<- EOF > /etc/resolv.conf.head
-# # OpenDNS IPv4 nameservers
-# nameserver 208.67.222.222
-# nameserver 208.67.220.220
-# # OpenDNS IPv6 nameservers
-# nameserver 2620:0:ccc::2
-# nameserver 2620:0:ccd::2
+setup_alt_dns(){
+  cat <<- EOF > /etc/resolv.conf.head
+# OpenDNS IPv4 nameservers
+nameserver 208.67.222.222
+nameserver 208.67.220.220
+# OpenDNS IPv6 nameservers
+nameserver 2620:0:ccc::2
+nameserver 2620:0:ccd::2
 
 # # Google IPv4 nameservers
 # nameserver 8.8.8.8
@@ -132,8 +132,8 @@ fi
 # # censurfridns.dk IPv6 nameservers
 # nameserver 2001:67c:28a4::
 # nameserver 2002:d596:2a92:1:71:53::
-# EOF
-# }
+EOF
+}
 
 make_partition(){
     DEVICE=$1
@@ -168,7 +168,7 @@ setup_connection() { #{{{
     # $EDITOR /etc/resolv.conf
   else
     systemctl start dhcpcd@${CONNECTION_DEVICE}.service
-    # setup_alt_dns
+    setup_alt_dns
   fi
   # pause_function
 }

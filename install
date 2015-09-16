@@ -190,6 +190,8 @@ echo "GRUB_DISABLE_SUBMENU=y" >> ${MOUNT_POINT}/etc/default/grub
 
 # setup mkinitcpio
 # HOOKS="base udev autodetect modconf block filesystems keyboard fsck"
+
+# https://wiki.archlinux.org/index.php/Installing_with_Fake_RAID
 if [[ $FAKE_RAID == true ]]; then
 	arch_chroot "pacman -S dmraid --noconfirm"
 	sed -i "/^HOOK/s/MODULES=""/MODULES="'${RAID_MODULES}'"/" ${MOUNT_POINT}/etc/mkinitcpio.conf
