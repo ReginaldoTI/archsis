@@ -2,10 +2,11 @@
 
 # DO NOT USE - or _ in names <<< ATTENTION!!!
 
-########################
-# variables            #
-# change as your needs #
-########################
+#############################################
+# variables                                 #
+# change as your needs                      #
+# raid examples /dev/md126, md126p1/md126p2 #
+#############################################
 DEVICE="/dev/sda" # principal device
 MBR_MOUNT_POINT="/dev/sda" # where to install your MBR
 BOOT_MOUNT_POINT="/dev/sda1" # where your boot will be installed
@@ -88,6 +89,13 @@ DNS_NAME="campusunifemm.edu.br"
 REALM=$DNS_NAME # used by samba
 USER_DOMAIN="002108" # used by samba
 AUTHENTICATE_ON_DOMAIN=false # experimental
+
+#######################
+# intel rapid storage #
+# RAID 0              #
+#######################
+FAKE_RAID=false
+RAID_MODULES="dm_mod dm_mirror" # don't change this
 
 ##########################################
 ##########################################

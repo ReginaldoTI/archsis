@@ -190,8 +190,15 @@ echo "GRUB_DISABLE_SUBMENU=y" >> ${MOUNT_POINT}/etc/default/grub
 
 # setup mkinitcpio
 # HOOKS="base udev autodetect modconf block filesystems keyboard fsck"
-sed -i '/^HOOK/s/block/block keymap encrypt lvm2/' ${MOUNT_POINT}/etc/mkinitcpio.conf
+if [[ $FAKE_RAID == true ]]; then
+	arch_chroot "pacman -S dmraid --noconfirm"
+	sed -i "/^HOOK/s/MODULES=""/MODULES="'${RAID_MODULES}'"/" ${MOUNT_POINT}/etc/mkinitcpio.conf
+	sed -i '/^HOOK/s/filesystems/dmraid filesystems/' ${MOUNT_POINT}/etc/mkinitcpio.conf
+fi
+
+sed -i '/^HOOK/s/filesystems/keymap encrypt lvm2 filesystems/' ${MOUNT_POINT}/etc/mkinitcpio.conf
 sed -i '/^HOOK/s/filesystems/filesystems shutdown/' ${MOUNT_POINT}/etc/mkinitcpio.conf
+
 if [ $INSTALL_ON_PENDRIVE == true ]; then
   sed -i '/^HOOK/s/block //' ${MOUNT_POINT}/etc/mkinitcpio.conf
   sed -i '/^HOOK/s/udev/udev block/' ${MOUNT_POINT}/etc/mkinitcpio.conf
