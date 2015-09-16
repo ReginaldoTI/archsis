@@ -28,7 +28,7 @@ check_multilib
 # partition MBR, work with gpt/efi
 if [[ $UEFI -eq 0 ]]; then
 
-  if [ "$PARTITION_TABLE" == "msdos" ]; then
+  #if [ "$PARTITION_TABLE" == "msdos" ]; then
   	## create msdos disk
   	parted -s $DEVICE mklabel msdos
   	## first device is boot
@@ -38,7 +38,7 @@ if [[ $UEFI -eq 0 ]]; then
   	## second device 
   	parted -s $DEVICE mkpart primary ext4 $BOOT_SIZE 100%
   	partprobe $DEVICE ## tell kernel we have a new partition table
-  fi
+  #fi
 elif [[ $UEFI -eq 1 ]]; then ## GPT
   if [ "$PARTITION_TABLE" == "gpt" ]; then
     make_partition $DEVICE 1MB `parted -m $DEVICE unit MB print free | grep 'free;' | sort -t : -k 4n -k 2n | tail -n 1 | awk -F':' '{print $2}'`
