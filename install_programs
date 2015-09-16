@@ -363,7 +363,8 @@ package_install "davfs2"
 package_install "catfish"
 package_install "gedit gedit-plugins vte3"
 package_install "xscreensaver"
-package_install "git gsfonts meld"
+package_install "git gsfonts tk"
+package_install "meld"
 package_install "gvfs gvfs-smb gvfs-nfs smbclient sshfs" # gnome-vfs # cifs-utils
 package_install "gvfs-afc" #: removable media (e.g. optical disks, USB data sticks, and cameras)
 package_install "gvfs-mtp" #: phones and media players that require MTP
