@@ -194,7 +194,7 @@ echo "GRUB_DISABLE_SUBMENU=y" >> ${MOUNT_POINT}/etc/default/grub
 # https://wiki.archlinux.org/index.php/Installing_with_Fake_RAID
 if [[ $FAKE_RAID == true ]]; then
 	arch_chroot "pacman -S dmraid --noconfirm"
-	sed -i "/^HOOK/s/MODULES=""/MODULES="'${RAID_MODULES}'"/" ${MOUNT_POINT}/etc/mkinitcpio.conf
+	sed -i '/^MODULES/s/""/"'${RAID_MODULES}'"/' ${MOUNT_POINT}/etc/mkinitcpio.conf
 	sed -i '/^HOOK/s/filesystems/dmraid filesystems/' ${MOUNT_POINT}/etc/mkinitcpio.conf
 fi
 
