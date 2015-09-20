@@ -95,7 +95,7 @@ AUTHENTICATE_ON_DOMAIN=false # experimental
 # RAID 0              #
 #######################
 FAKE_RAID=false
-RAID_MODULES="dm_mod dm_mirror" # don't change this
+RAID_MODULES="raid0 dm_mod dm_mirror" # don't change this
 
 ##########################################
 ##########################################
@@ -129,5 +129,5 @@ fi
 
 # setting default
 if [ ! -z $WIRED_DEV ] && [ ! -z $WIRELESS_DEV ]; then
-  CONNECTION_DEVICE=$WIRED_DEV
+  CONNECTION_DEVICE=$WIRELESS_DEV
 fi
