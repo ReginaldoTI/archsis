@@ -26,6 +26,7 @@ LOCALE="en_US" # or pt_BR
 ARCHI=`uname -m` # ARCHITECTURE
 LOCAL_TIME=true # set local time or network time
 GIT_ACCOUNT="luisantoniojr" # github account name
+USE_UUID=true # use uuid in grub and fstab
 
 #############################################
 # Use this option only for pendrive install #

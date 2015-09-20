@@ -184,7 +184,15 @@ arch_chroot "pacman -Syu grub grub-bios os-prober parted --noconfirm"
 
 # setup grub default
 sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet"/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash video=vesa:off"/' ${MOUNT_POINT}/etc/default/grub
-sed -i 's|GRUB_CMDLINE_LINUX=""|GRUB_CMDLINE_LINUX="cryptdevice='${ROOT_MOUNT_POINT}':'${VG_CREATE_NAME}'"|' ${MOUNT_POINT}/etc/default/grub
+
+if [[ $USE_UUID == false ]]; then
+  sed -i 's|GRUB_CMDLINE_LINUX=""|GRUB_CMDLINE_LINUX="cryptdevice='${ROOT_MOUNT_POINT}':'${VG_CREATE_NAME}'"|' ${MOUNT_POINT}/etc/default/grub
+else
+  CRYPT_DEVICE_UUID=$(blkid $ROOT_MOUNT_POINT -s UUID -o value)
+  sed -i 's|GRUB_CMDLINE_LINUX=""|GRUB_CMDLINE_LINUX="cryptdevice=/dev/disk/by-uuid/'${CRYPT_DEVICE_UUID}':'${VG_CREATE_NAME}'"|' ${MOUNT_POINT}/etc/default/grub
+
+fi
+
 #[[ $INSTALL_ON_PENDRIVE == false ]] && sed -i "/#GRUB_DISABLE_LINUX_UUID=true/s/^#//" ${MOUNT_POINT}/etc/default/grub
 echo "GRUB_DISABLE_SUBMENU=y" >> ${MOUNT_POINT}/etc/default/grub
 
