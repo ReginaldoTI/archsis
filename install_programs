@@ -392,7 +392,11 @@ package_install "evince"
 package_install "simple-scan"
 package_install "transmission-gtk"
 package_install "skype"
+
+# sound programs
 package_install "audacity"
+package_install "soundconverter"
+
 package_install "easytag"
 package_install "handbrake"
 package_install "gnome-calculator"
