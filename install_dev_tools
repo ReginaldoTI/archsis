@@ -13,6 +13,7 @@ fi
 
 package_install "nodejs npm"
 package_install "jre8-openjdk jdk8-openjdk openjdk8-doc"
+package_install "readline ncurses lib32-readline lib32-ncurses"
 aur_package_install "sublime-text-dev"
 
 # ruby on rails
