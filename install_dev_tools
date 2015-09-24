@@ -14,7 +14,7 @@ fi
 package_install "nodejs npm"
 package_install "jre8-openjdk jdk8-openjdk openjdk8-doc"
 package_install "readline ncurses lib32-readline lib32-ncurses"
-package_install "freetds"
+package_install "freetds unixodbc"
 aur_package_install "sublime-text-dev"
 
 # ruby on rails
@@ -27,3 +27,6 @@ curl -sSL https://get.rvm.io | bash -s stable --rails
 # mysql
 
 # mongodb
+
+# sqlite
+package_install "sqlite sqliteman"
