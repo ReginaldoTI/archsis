@@ -427,17 +427,17 @@ package_install "adwaita-icon-theme gnome-icon-theme gnome-icon-theme-extras gno
 package_install "faenza-icon-theme faience-icon-theme"
 
 # spell checking [HUNSPELL]
-package_install "hunspell hunspell-$LOCALE_HS"
+#package_install "hunspell hunspell-$LOCALE_HS"
 
 # Hyphenation rules [HYPHEN]
-package_install "hyphen hyphen-$LOCALE_HP"
+#package_install "hyphen hyphen-$LOCALE_HP"
 
 # Thesaurus [LIBMYTHES MYTHES]
 # sudo pacman -S aspell aspell-en hunspell-en hyphen-en libmythes mythes-en
-package_install "libmythes mythes mythes-$LOCALE_MT"
+#package_install "libmythes mythes mythes-$LOCALE_MT"
 
 # 3G modem
-package_install "usbutils usb_modeswitch modemmanager"
+#package_install "usbutils usb_modeswitch modemmanager"
 
 # clamav # freshclam
 package_install clamav
