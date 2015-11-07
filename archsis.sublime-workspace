@@ -1,0 +1,740 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"get",
+				"getReport"
+			],
+			[
+				"con",
+				"controllerAs"
+			],
+			[
+				"act",
+				"action"
+			],
+			[
+				"on",
+				"onerrorCallback"
+			],
+			[
+				"fun",
+				"function"
+			],
+			[
+				"j",
+				"jsx"
+			],
+			[
+				"pack",
+				"package_install"
+			],
+			[
+				"IN",
+				"INSTALL_ON_PENDRIVE"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "install",
+			"settings":
+			{
+				"buffer_size": 9919,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "install_programs",
+			"settings":
+			{
+				"buffer_size": 19566,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "gnome_install.sh",
+			"settings":
+			{
+				"buffer_size": 3108,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 140.0,
+		"last_filter": "remove",
+		"selected_items":
+		[
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"task",
+				"Tasks: New document"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"ins",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 457.0
+	},
+	"console":
+	{
+		"height": 126.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = 'eb2297e1a458f27d836c04bb0cbaf282' + 'd0e7a3098092775ccb37ca9d6b2e4b7d'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/luis/git/archsis"
+	],
+	"file_history":
+	[
+		"/home/luis/git/archsis/install",
+		"/home/luis/git/archsis/install_programs",
+		"/home/luis/desenvolvimento/orca/backend/orca/app/controllers/api/v1/report_controller.rb",
+		"/home/luis/desenvolvimento/orca/frontend/app/scripts/controllers/report.js",
+		"/home/luis/desenvolvimento/orca/todo.md",
+		"/home/luis/.config/sublime-text-3/Packages/User/Preferences.sublime-settings",
+		"/home/luis/desenvolvimento/orca/commands.txt",
+		"/home/luis/desenvolvimento/ruby/soap_client/soap_client_rm_process.rb",
+		"/home/luis/desenvolvimento/orca/backend/orca/app/models/report.rb",
+		"/home/luis/desenvolvimento/orca/backend/orca/config.ru",
+		"/home/luis/Dropbox/luis_antonio.TODO",
+		"/home/luis/desenvolvimento/ruby/soap_client/read.txt",
+		"/home/luis/desenvolvimento/ruby/soap_client/example_savon_2.rb",
+		"/home/luis/desenvolvimento/ruby/soap_client/example_savon.rb",
+		"/home/luis/desenvolvimento/ruby/soap_client/soap_client.rb",
+		"/home/luis/desenvolvimento/orca/backend/orca/db/migrate/20151014185128_create_report_lines.rb",
+		"/home/luis/desenvolvimento/orca/frontend/app/views/setup.html",
+		"/home/luis/desenvolvimento/orca/frontend/app/views/report.html",
+		"/home/luis/desenvolvimento/orca/frontend/app/scripts/controllers/setup.js",
+		"/home/luis/desenvolvimento/orca/frontend/app/scripts/controllers/main.js",
+		"/home/luis/desenvolvimento/orca/frontend/app/scripts/app.js",
+		"/home/luis/desenvolvimento/orca/frontend/app/index.html",
+		"/home/luis/desenvolvimento/ruby/soap_client/soap_client",
+		"/home/luis/Encfs/Dropbox/projetos/ruby/exportaDadosAx/exportaDadosAx.rb",
+		"/home/luis/desenvolvimento/ruby/test.rb",
+		"/home/luis/desenvolvimento/ruby/soap_client.rb",
+		"/home/luis/Encfs/Dropbox/projetos/ruby/exportaDadosAx/configuracoes.rb",
+		"/home/luis/desenvolvimento/orca/frontend/app/scripts/controllers/line.js",
+		"/home/luis/desenvolvimento/orca/frontend/app/views/report_form_setup.html",
+		"/home/luis/desenvolvimento/orca/frontend/app/views/report_form_run.html",
+		"/home/luis/desenvolvimento/orca/frontend/app/views/main.html",
+		"/home/luis/desenvolvimento/orca/frontend/app/views/report_form_new.html",
+		"/home/luis/desenvolvimento/orca/frontend/app/views/report_form_edit.html",
+		"/home/luis/desenvolvimento/orca/frontend/node_modules/grunt-google-cdn/node_modules/google-cdn/node_modules/cdnjs-cdn-data/external/cdnjs.json",
+		"/home/luis/desenvolvimento/orca/frontend/app/views/report_anterior.html",
+		"/home/luis/desenvolvimento/orca/frontend/app/views/report_form.html",
+		"/home/luis/desenvolvimento/orca/frontend/app/views/report_from_new.html",
+		"/home/luis/desenvolvimento/orca/frontend/app/views/my-dialog.html",
+		"/home/luis/desenvolvimento/orca/backend/orca/config/routes.rb",
+		"/home/luis/desenvolvimento/rails/test_orca/public/frontend_orca/index.html",
+		"/home/luis/desenvolvimento/rails/test_orca/public/frontend_orca/js/app.js",
+		"/home/luis/desenvolvimento/nodejs/orca_test/controllers/report.js",
+		"/home/luis/desenvolvimento/nodejs/orca_test/controllers/index.js",
+		"/home/luis/desenvolvimento/nodejs/orca_test/config.js",
+		"/home/luis/desenvolvimento/nodejs/orca_test/functions.js",
+		"/home/luis/desenvolvimento/nodejs/orca_test/views/report/index.html",
+		"/home/luis/desenvolvimento/nodejs/orca_test/main.js",
+		"/home/luis/desenvolvimento/nodejs/orca_test/server.js",
+		"/home/luis/desenvolvimento/nodejs/orca_test/router.js",
+		"/home/luis/desenvolvimento/nodejs/orca_test/database.js",
+		"/home/luis/desenvolvimento/nodejs/orca_test/models/report.js",
+		"/home/luis/desenvolvimento/orca/backend/orca/app/controllers/report_controller.rb",
+		"/home/luis/desenvolvimento/orca/frontend/app/styles/main.scss",
+		"/home/luis/desenvolvimento/orca/frontend/.tmp/styles/main.css",
+		"/home/luis/desenvolvimento/orca/backend/orca/app/controllers/application_controller.rb",
+		"/home/luis/desenvolvimento/orca/backend/orca/config/application.rb",
+		"/home/luis/.config/sublime-text-3/Packages/Default/Preferences.sublime-settings",
+		"/home/luis/desenvolvimento/orca/backend/orca/config/environments/development.rb",
+		"/home/luis/desenvolvimento/orca/backend/orca/Gemfile",
+		"/home/luis/desenvolvimento/orca/backend/orca/db/migrate/20151014185101_create_reports.rb",
+		"/home/luis/desenvolvimento/orca/frontend/app/views/line.html",
+		"/home/luis/desenvolvimento/orca/frontend/package.json",
+		"/home/luis/desenvolvimento/rails/test_orca/public/frontend/app/index.html",
+		"/home/luis/test.rb",
+		"/home/luis/desenvolvimento/rails/test_orca/public/frontend/angular/report_controller.js",
+		"/home/luis/desenvolvimento/front_end_orca/js/bootstrap.min.js",
+		"/home/luis/desenvolvimento/front_end_orca/assinatura.html",
+		"/home/luis/desenvolvimento/front_end_orca/js/report_controller.js",
+		"/home/luis/desenvolvimento/rails/test_orca/Gemfile",
+		"/home/luis/desenvolvimento/rails/test_orca/app/controllers/orcas_controller.rb",
+		"/home/luis/.config/sublime-text-3/Packages/User/LiveReload.sublime-settings",
+		"/home/luis/.config/sublime-text-3/Packages/User/Package Control.sublime-settings",
+		"/home/luis/.config/sublime-text-3/Packages/LiveReload/LiveReload.sublime-settings",
+		"/home/luis/Desktop/react-frontend/script/test2.jsx",
+		"/home/luis/Desktop/react-frontend/test_react.html",
+		"/home/luis/Desktop/react-tutorial-master/public/index.html",
+		"/home/luis/Desktop/react-tutorial-master/public/scripts/example.js",
+		"/home/luis/Desktop/react-frontend/index.html",
+		"/home/luis/git/aui/lilo",
+		"/home/luis/testApi9/app/controllers/report_controller.rb",
+		"/home/luis/testApi/app/views/layouts/application.html.erb",
+		"/home/luis/testApi/app/controllers/application_controller.rb",
+		"/home/luis/desenvolvimento/rails/test_orca/public/frontend/index.html",
+		"/home/luis/desenvolvimento/rails/test_orca/app/views/layouts/application.html.erb",
+		"/home/luis/.rvm/gems/ruby-2.2.1/gems/activerecord-sqlserver-adapter-4.2.4/lib/active_record/connection_adapters/sqlserver/schema_statements.rb",
+		"/home/luis/git/archsis/install_dev_tools",
+		"/home/luis/Encfs/Dropbox/projetos/rails/EmDesenvolvimento/railstutorial-sample_app_2nd_ed/db/migrate/20120308215846_create_relationships.rb",
+		"/home/luis/Encfs/Dropbox/projetos/rails/EmDesenvolvimento/erp/db/migrate/20121015115503_create_histformasdepagamento.rb",
+		"/home/luis/Encfs/Dropbox/projetos/rails/EmDesenvolvimento/erp/Arquivos/inicializando_sistema.sh",
+		"/home/luis/Encfs/Dropbox/projetos/rails/EmDesenvolvimento/alloy-complex-form-examples-111cf7a/db/migrate/20080918210237_create_authors.rb",
+		"/home/luis/Encfs/Dropbox/projetos/rails/EmDesenvolvimento/layout/db/migrate/20111008055908_devise_create_clients.rb",
+		"/home/luis/Encfs/Dropbox/projetos/rails/EmDesenvolvimento/layout/db/migrate/20111008060839_add_designer_id_to_creations.rb",
+		"/home/luis/Encfs/Dropbox/projetos/rails/EmDesenvolvimento/erp_bkp_2/db/migrate/20120925185312_create_pedidos.rb",
+		"/home/luis/Encfs/Dropbox/projetos/rails/EmDesenvolvimento/erp_bkp/db/migrate/20120927134327_create_clientes.rb",
+		"/home/luis/Encfs/Dropbox/projetos/rails/EmDesenvolvimento/erp/db/migrate/20120927134340_create_pedido_linhas.rb",
+		"/home/luis/Encfs/Dropbox/projetos/rails/EmDesenvolvimento/alloy-complex-form-examples-111cf7a/db/migrate/20090121125841_moved_f_key_from_author_to_project.rb",
+		"/home/luis/Encfs/Dropbox/projetos/rails/EmDesenvolvimento/alloy-complex-form-examples-111cf7a/db/migrate/20080718205616_create_projects.rb",
+		"/home/luis/Encfs/Dropbox/projetos/nodejs/9588_4_code/code/db/migrate/20120701173112_create_todo_items.rb",
+		"/home/luis/Encfs/Dropbox/projetos/erp/sistema/baseDeDados.rb",
+		"/home/luis/desenvolvimento/rails/orca/db/migrate/20150923191142_create_setups.rb",
+		"/home/luis/Encfs/Dropbox/projetos/rails/EmDesenvolvimento/197-nested-model-form-part-2/surveysays/db/migrate/20100109231422_create_questions.rb",
+		"/home/luis/Encfs/Dropbox/projetos/rails/EmDesenvolvimento/alloy-complex-form-examples-111cf7a/db/migrate/20081009223404_create_projects_tags_join_table.rb",
+		"/home/luis/Encfs/Dropbox/projetos/rails/erp/iniciando_projeto.sh",
+		"/home/luis/desenvolvimento/testRails/Gemfile",
+		"/home/luis/Encfs/Dropbox/projetos/rails/SiteHelperTi/app/views/principal/index.html.erb",
+		"/home/luis/Encfs/Dropbox/projetos/rails/SiteHelperTi/app/views/layouts/application.html.erb",
+		"/home/luis/Encfs/Dropbox/projetos/rails/EmProducao/erp_bootstrap/app/views/clientes/index.html.erb",
+		"/home/luis/desenvolvimento/orca_test/frontend/index.html",
+		"/home/luis/desenvolvimento/mvc_engine/engine/tools.js",
+		"/home/luis/git/archsis/setup",
+		"/home/luis/Encfs/Dropbox/projetos/nodejs/mssql/app.js",
+		"/home/luis/Encfs/Dropbox/projetos/nodejs/mssql/app_tedious.js",
+		"/home/luis/Encfs/Dropbox/projetos/nodejs/mssql/query1.sql",
+		"/home/luis/Encfs/Dropbox/projetos/nodejs/mssql/node_modules/tedious/package.json",
+		"/home/luis/git/archsis/sharedfuncs",
+		"/home/luis/Encfs/Dropbox/projetos/nodejs/etl/config.js",
+		"/home/luis/testes/test_rails/app/views/items/index.html.erb",
+		"/home/luis/testes/test_rails/app/views/items/new.html.erb",
+		"/home/luis/testes/test_rails/app/views/items/show.html.erb",
+		"/home/luis/testes/test_rails/app/views/items/_form.html.erb",
+		"/home/luis/testes/test_rails/app/views/items/edit.html.erb",
+		"/home/luis/desenvolvimento/mvc_engine/engine/views/project/show.html",
+		"/home/luis/desenvolvimento/mvc_engine/engine/views/project/new.html",
+		"/home/luis/desenvolvimento/mvc_engine/engine/views/project/index.html",
+		"/home/luis/desenvolvimento/mvc_engine/engine/views/project/edit.html",
+		"/home/luis/desenvolvimento/mvc_engine/engine/views/project/_form.html",
+		"/home/luis/desenvolvimento/mvc_engine/engine/models/project.js",
+		"/home/luis/desenvolvimento/mvc_engine/engine/controllers/project.js"
+	],
+	"find":
+	{
+		"height": 37.0
+	},
+	"find_in_files":
+	{
+		"height": 109.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"ntp",
+			"local",
+			"tns",
+			"          ",
+			"         ",
+			"                                                   ",
+			"                                                  ",
+			"                                                 ",
+			"                                                ",
+			"                                               ",
+			"                                              ",
+			"                                             ",
+			"                                            ",
+			"                                           ",
+			"                                          ",
+			"                                         ",
+			"                                        ",
+			"                                       ",
+			"                                      ",
+			"                                     ",
+			"                                    ",
+			"                                   ",
+			"                                  ",
+			"                                 ",
+			"                                ",
+			"                               ",
+			"                              ",
+			"                             ",
+			"                            ",
+			"                           ",
+			"                          ",
+			"                         ",
+			"                        ",
+			"                       ",
+			"                      ",
+			"                     ",
+			"                    ",
+			"                   ",
+			"                  ",
+			"                 ",
+			"                ",
+			"               ",
+			"              ",
+			"             ",
+			"            ",
+			"           ",
+			"          ",
+			"         ",
+			"email",
+			"report_line_param",
+			"report_line_name",
+			"exampleInputEmail2",
+			"exampleInputName2",
+			"description",
+			"code",
+			"report_line",
+			"SetupCtrl",
+			"LineCtrl",
+			"sm",
+			"code",
+			"report_delete",
+			"report_update",
+			"report_create",
+			"awesomeThings",
+			"onerrorCallback",
+			"onsuccessCallback",
+			"modalInstance",
+			"input_code",
+			"code",
+			"inputEmail3",
+			"customer",
+			"Password",
+			"password",
+			"Password",
+			"inputPassword3",
+			"http_request_options",
+			"orca",
+			"Orca",
+			"orca",
+			"Orca",
+			"orca",
+			"orca_params",
+			"Orca",
+			"orca",
+			"Orca",
+			"orca",
+			"Orca",
+			"orca",
+			"Orca",
+			"orca",
+			"Orca",
+			"orca",
+			"Orca",
+			"orca",
+			"orcas",
+			"orca",
+			"options",
+			"report_list_controller",
+			"karma",
+			"setState",
+			"gnome",
+			"add_index :",
+			"ActiveRecord::Migration",
+			" t.string",
+			"generate controller",
+			"generate scaffold",
+			":string",
+			"controller",
+			"scaffold",
+			"CLassis",
+			"database.yml",
+			"clamav",
+			"response.writeHead",
+			"sed",
+			"mssql",
+			"git",
+			"sda",
+			"JSON",
+			"parse",
+			"archiver",
+			"tedious",
+			"onClientRequesting",
+			"app.init",
+			"samba",
+			"/^#",
+			"rsync",
+			"gamin",
+			"gvfs"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"backend_delete",
+			"backend_update",
+			"backend_create"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "install",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 9919,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/ShellScript/Shell-Unix-Generic.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "install_programs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 19566,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/ShellScript/Shell-Unix-Generic.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "gnome_install.sh",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3108,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/ShellScript/Shell-Unix-Generic.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 27.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "archsis.sublime-project",
+	"replace":
+	{
+		"height": 74.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"ins",
+				"install"
+			],
+			[
+				"report_cont",
+				"backend/orca/app/controllers/api/v1/report_controller.rb"
+			],
+			[
+				"report",
+				"frontend/app/scripts/controllers/report.js"
+			],
+			[
+				"report_controll",
+				"backend/orca/app/controllers/api/v1/report_controller.rb"
+			],
+			[
+				"config.ru",
+				"backend/orca/config.ru"
+			],
+			[
+				"report.r",
+				"backend/orca/app/models/report.rb"
+			],
+			[
+				"repo",
+				"frontend/app/scripts/controllers/report.js"
+			],
+			[
+				"create_",
+				"backend/orca/db/migrate/20151014185128_create_report_lines.rb"
+			],
+			[
+				"main.j",
+				"frontend/app/scripts/controllers/main.js"
+			],
+			[
+				"repor",
+				"frontend/app/views/report.html"
+			],
+			[
+				"report.js",
+				"frontend/app/scripts/controllers/report.js"
+			],
+			[
+				"index",
+				"frontend/app/index.html"
+			],
+			[
+				"app",
+				"frontend/app/scripts/app.js"
+			],
+			[
+				"todo",
+				"todo.md"
+			],
+			[
+				"setup.h",
+				"frontend/app/views/report_form_setup.html"
+			],
+			[
+				"main.html",
+				"frontend/app/views/main.html"
+			],
+			[
+				"main.js",
+				"frontend/app/scripts/controllers/main.js"
+			],
+			[
+				"report_fo",
+				"frontend/app/views/report_form.html"
+			],
+			[
+				"inde",
+				"frontend/app/index.html"
+			],
+			[
+				"report_",
+				"frontend/app/views/report_form.html"
+			],
+			[
+				"route",
+				"backend/orca/config/routes.rb"
+			],
+			[
+				"report_contro",
+				"backend/orca/app/controllers/api/v1/report_controller.rb"
+			],
+			[
+				"report_con",
+				"backend/orca/app/controllers/report_controller.rb"
+			],
+			[
+				"reports",
+				"frontend/app/scripts/controllers/report.js"
+			],
+			[
+				"main",
+				"frontend/.tmp/styles/main.css"
+			],
+			[
+				"appl",
+				"backend/orca/config/application.rb"
+			],
+			[
+				"routes",
+				"backend/orca/config/routes.rb"
+			],
+			[
+				"report_co",
+				"backend/orca/app/controllers/report_controller.rb"
+			],
+			[
+				"router",
+				"backend/orca/config/routes.rb"
+			],
+			[
+				"applica",
+				"backend/orca/app/controllers/application_controller.rb"
+			],
+			[
+				"controller",
+				"backend/orca/app/controllers/api/v1/report_controller.rb"
+			],
+			[
+				"gem",
+				"backend/orca/Gemfile"
+			],
+			[
+				"rep",
+				"frontend/app/views/report.html"
+			],
+			[
+				"line",
+				"frontend/app/scripts/controllers/line.js"
+			],
+			[
+				"contro",
+				"test_orca/public/frontend/angular/report_controller.js"
+			],
+			[
+				"controll",
+				"app/controllers/orcas_controller.rb"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"~/desenvolvimento/orca.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": false,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": false,
+	"side_bar_width": 249.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
