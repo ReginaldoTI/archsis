@@ -71,12 +71,12 @@ if [ $SEPARATE_HOME == true ]; then
 	cryptsetup luksOpen $HOME_ROOT_MOUNT_POINT $HOME_CRYPT_NAME
 fi
 
-# set key file to home, if it is separate
+# set key file to home, if it is separated
 if [ $SEPARATE_HOME == true ]; then
 	if [ $KEYFILE == true ]; then
 		echo "create ${KEYFILE_NAME}"
 		dd bs=1024 count=4 if=/dev/urandom of=$KEYFILE_NAME iflag=fullblock
-		chmod 0400 $KEYFILE_NAME # only root cab read
+		chmod 0400 $KEYFILE_NAME # only root can read
 		echo "set ${KEYFILE_NAME} to ${HOME_ROOT_MOUNT_POINT}"
 		cryptsetup luksAddKey $HOME_ROOT_MOUNT_POINT $KEYFILE_NAME
 	fi

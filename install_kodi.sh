@@ -379,6 +379,7 @@ package_install "gvfs-mtp" #: phones and media players that require MTP
 # package_install "smplayer" # gui for mplayer
 # package_install "audacious audacious-plugins"
 # package_install "banshee"
+package_install "kodi"
 
 # package_install "filezilla"
 # package_install "firefox firefox-i18n-$LOCALE_FF firefox-adblock-plus flashplugin"
@@ -503,38 +504,29 @@ pacman -Syu
 #   sudo net rpc join -U ${USER_DOMAIN}
 # fi
 
-Socket activation
+##############
+# [customize]#
+##############
+# List the channels:
+# xfconf-query -l
+# List all of the properties and values of a channel:
+# xfconf-query -c <CHANNEL> -lv
+# Create a new property:
+# xfconf-query -c <CHANNEL> -p <PROPERTY> -n -t <TYPE> -s <VALUE>
+# Change an existing property (same as previous but without the -n):
+# xfconf-query -c <CHANNEL> -p <PROPERTY> -s <VALUE>
 
-Socket activation can be used to start Kodi when the user starts a remote control app or on a connection to Kodi's html control port. Start listening with systemctl start kodi@luis.socket (replace user with the user running Kodi to be started as). Depending on the setup, the port in kodi@.socket might need to be changed.
----------------------------------
-/etc/systemd/system/kodi@.service
+# # Always uncheck save session for future logins
+# xfconf-query -c xfce4-session -p /general/SaveOnExit -n -t bool -s false
+# # change icon
+# xfconf-query -c xsettings -p /Net/IconThemeName -s Faenza-Ambiance
+# # settings -> windows manager -> style
+# xfconf-query -c xfwm4 -p /general/theme -s Numix
+# # settings -> appearance - style
+# xfconf-query -c xsettings -p /Net/ThemeName -s Numix
+# # change workspace numbers
+# xfconf-query -c xfwm4 -p /general/workspace_count -s 1
+# # change clock format
+# xfconf-query -c xfce4-panel -p /plugins/plugin-5/digital-format -s "%R%n<span size='x-small'>%d-%m %Y</span>"
 
-[Unit]
-Description=Launch Kodi on main display
-
-[Service]
-Type=oneshot
-Environment=DISPLAY=:0.0
-Nice=-1
-ExecStart=/usr/bin/su %i /usr/bin/kodi
-ExecStartPost=/usr/bin/bash -c "sleep 15 && systemctl start kodi@%i.socket"
-
-[Install]
-WantedBy=multi-user.target
---------------------------------
-/etc/systemd/system/kodi@.socket
-
-[Unit]
-Conflicts=kodi@%i.service
-
-[Socket]
-# listen for WOL packets
-#ListenDatagram=9
-
-# change this to Kodi's http control port
-ListenStream=8080
-
-[Install]
-WantedBy=sockets.target
------------------------------------
 # reboot
