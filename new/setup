@@ -48,7 +48,7 @@ X11KEYMAP="br"
 
 # define setup install
 INSTALL_DOCKER=false # install docker
-INSTALL_VIRTUALBOX=true # install virtualbox
+INSTALL_VIRTUALBOX=false # install virtualbox
 INSTALL_CUPS=false # install cups / print
 
 ############################################################### 
