@@ -25,6 +25,13 @@ else
   exit 1
 fi
 
+if [[ -f `pwd`/setup ]]; then
+  source setup
+else
+  echo "missing file: setup"
+  exit 1
+fi
+
 #ARCHLINUX U INSTALL {{{
 #WELCOME {{{
 welcome(){
@@ -100,66 +107,66 @@ language_selector(){
   fi
   #}}}
   #}}}
-  print_title "LOCALE - https://wiki.archlinux.org/index.php/Locale"
-  print_info "Locales are used in Linux to define which language the user uses. As the locales define the character sets being used as well, setting up the correct locale is especially important if the language contains non-ASCII characters."
-  read -p "Default system language: \"$LOCALE\" [Y/n]: " OPTION
-  case "$OPTION" in
-    "n")
-      while [[ $OPTION != y ]]; do
-        setlocale
-        read_input_text "Confirm locale ($LOCALE)"
-      done
-      sed -i '/'${LOCALE}'/s/^#//' /etc/locale.gen
-      locale-gen
-      localectl set-locale LANG=${LOCALE_UTF8}
-      #KDE #{{{
-      if [[ $LOCALE == pt_BR || $LOCALE == en_GB || $LOCALE == zh_CN ]]; then
-        LOCALE_KDE=`echo $LOCALE | tr '[:upper:]' '[:lower:]'`
-      elif [[ $LOCALE == en_US ]]; then
-        LOCALE_KDE="en_gb"
-      else
-        LOCALE_KDE=`echo $LOCALE | cut -d\_ -f1`
-      fi
-      #}}}
-      #FIREFOX #{{{
-      if [[ $LOCALE == pt_BR || $LOCALE == pt_PT || $LOCALE == en_GB || $LOCALE == en_US || $LOCALE == es_AR || $LOCALE == es_CL || $LOCALE == es_ES || $LOCALE == zh_CN ]]; then
-        LOCALE_FF=`echo $LOCALE | tr '[:upper:]' '[:lower:]' | sed 's/_/-/'`
-      else
-        LOCALE_FF=`echo $LOCALE | cut -d\_ -f1`
-      fi
-      #}}}
-      #THUNDERBIRD #{{{
-      if [[ $LOCALE == pt_BR || $LOCALE == pt_PT || $LOCALE == en_US || $LOCALE == en_GB || $LOCALE == es_AR || $LOCALE == es_ES || $LOCALE == zh_CN ]]; then
-        LOCALE_TB=`echo $LOCALE | tr '[:upper:]' '[:lower:]' | sed 's/_/-/'`
-      elif [[ $LOCALE == es_CL ]]; then
-        LOCALE_TB="es-es"
-      else
-        LOCALE_TB=`echo $LOCALE | cut -d\_ -f1`
-      fi
-      #}}}
-      #HUNSPELL #{{{
-      if [[ $LOCALE == pt_BR ]]; then
-        LOCALE_HS=`echo $LOCALE | tr '[:upper:]' '[:lower:]' | sed 's/_/-/'`
-      elif [[ $LOCALE == pt_PT ]]; then
-        LOCALE_HS="pt_pt"
-      else
-        LOCALE_HS=`echo $LOCALE | cut -d\_ -f1`
-      fi
-      #}}}
-      #ASPELL #{{{
-      LOCALE_AS=`echo $LOCALE | cut -d\_ -f1`
-      #}}}
-      #LIBREOFFICE #{{{
-      if [[ $LOCALE == pt_BR || $LOCALE == en_GB || $LOCALE == en_US || $LOCALE == zh_CN ]]; then
-        LOCALE_LO=`echo $LOCALE | sed 's/_/-/'`
-      else
-        LOCALE_LO=`echo $LOCALE | cut -d\_ -f1`
-      fi
-      #}}}
-      ;;
-    *)
-      ;;
-  esac
+  # print_title "LOCALE - https://wiki.archlinux.org/index.php/Locale"
+  # print_info "Locales are used in Linux to define which language the user uses. As the locales define the character sets being used as well, setting up the correct locale is especially important if the language contains non-ASCII characters."
+  # read -p "Default system language: \"$LOCALE\" [Y/n]: " OPTION
+  # case "$OPTION" in
+  #   "n")
+  #     while [[ $OPTION != y ]]; do
+  #       setlocale
+  #       read_input_text "Confirm locale ($LOCALE)"
+  #     done
+  #     sed -i '/'${LOCALE}'/s/^#//' /etc/locale.gen
+  #     locale-gen
+  #     localectl set-locale LANG=${LOCALE_UTF8}
+  #     #KDE #{{{
+  #     if [[ $LOCALE == pt_BR || $LOCALE == en_GB || $LOCALE == zh_CN ]]; then
+  #       LOCALE_KDE=`echo $LOCALE | tr '[:upper:]' '[:lower:]'`
+  #     elif [[ $LOCALE == en_US ]]; then
+  #       LOCALE_KDE="en_gb"
+  #     else
+  #       LOCALE_KDE=`echo $LOCALE | cut -d\_ -f1`
+  #     fi
+  #     #}}}
+  #     #FIREFOX #{{{
+  #     if [[ $LOCALE == pt_BR || $LOCALE == pt_PT || $LOCALE == en_GB || $LOCALE == en_US || $LOCALE == es_AR || $LOCALE == es_CL || $LOCALE == es_ES || $LOCALE == zh_CN ]]; then
+  #       LOCALE_FF=`echo $LOCALE | tr '[:upper:]' '[:lower:]' | sed 's/_/-/'`
+  #     else
+  #       LOCALE_FF=`echo $LOCALE | cut -d\_ -f1`
+  #     fi
+  #     #}}}
+  #     #THUNDERBIRD #{{{
+  #     if [[ $LOCALE == pt_BR || $LOCALE == pt_PT || $LOCALE == en_US || $LOCALE == en_GB || $LOCALE == es_AR || $LOCALE == es_ES || $LOCALE == zh_CN ]]; then
+  #       LOCALE_TB=`echo $LOCALE | tr '[:upper:]' '[:lower:]' | sed 's/_/-/'`
+  #     elif [[ $LOCALE == es_CL ]]; then
+  #       LOCALE_TB="es-es"
+  #     else
+  #       LOCALE_TB=`echo $LOCALE | cut -d\_ -f1`
+  #     fi
+  #     #}}}
+  #     #HUNSPELL #{{{
+  #     if [[ $LOCALE == pt_BR ]]; then
+  #       LOCALE_HS=`echo $LOCALE | tr '[:upper:]' '[:lower:]' | sed 's/_/-/'`
+  #     elif [[ $LOCALE == pt_PT ]]; then
+  #       LOCALE_HS="pt_pt"
+  #     else
+  #       LOCALE_HS=`echo $LOCALE | cut -d\_ -f1`
+  #     fi
+  #     #}}}
+  #     #ASPELL #{{{
+  #     LOCALE_AS=`echo $LOCALE | cut -d\_ -f1`
+  #     #}}}
+  #     #LIBREOFFICE #{{{
+  #     if [[ $LOCALE == pt_BR || $LOCALE == en_GB || $LOCALE == en_US || $LOCALE == zh_CN ]]; then
+  #       LOCALE_LO=`echo $LOCALE | sed 's/_/-/'`
+  #     else
+  #       LOCALE_LO=`echo $LOCALE | cut -d\_ -f1`
+  #     fi
+  #     #}}}
+  #     ;;
+  #   *)
+  #     ;;
+  # esac
 }
 #}}}
 #SELECT/CREATE USER {{{

@@ -1,11 +1,32 @@
 #!/bin/bash
 
-# vars
+# check if all files are there
+
+if [[ -f `pwd`/fifo ]]; then
+  source fifo
+else
+  echo "missing file: fifo"
+  exit 1
+fi
+
+if [[ -f `pwd`/lilo ]]; then
+  source lilo
+else
+  echo "missing file: lilo"
+  exit 1
+fi
 
 if [[ -f `pwd`/sharedfuncs ]]; then
   source sharedfuncs
 else
   echo "missing file: sharedfuncs"
+  exit 1
+fi  
+
+if [[ -f `pwd`/setup ]]; then
+  source setup
+else
+  echo "missing file: setup"
   exit 1
 fi
 
