@@ -271,7 +271,7 @@ arch_chroot "pacman -S --noconfirm xorg-{xinit,utils,server,server-utils,xkill}"
 arch_chroot "pacman -S --noconfirm xf86-input-synaptics xf86-input-mouse xf86-input-keyboard xf86-input-wacom xf86-input-libinput"
 arch_chroot "pacman -S --noconfirm xorg-twm xorg-xclock xterm"
 arch_chroot "pacman -S --noconfirm mesa"
-package_install "gamin"
+arch_chroot "pacman -S --noconfirm gamin"
 
 # ADD KEYMAP TO THE NEW SETUP
 # https://wiki.archlinux.org/index.php/Keyboard_configuration_in_Xorg

@@ -291,6 +291,9 @@ config_xinitrc "startxfce4"
 # install_themes "XFCE"
 #}}}
 
+# install cinnamon
+package_install "cinnamon"
+
 # display manager
 package_install gdm
 system_ctl enable gdm
