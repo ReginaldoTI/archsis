@@ -1,0 +1,311 @@
+#!/bin/bash
+
+# check if all files are there
+
+if [[ -f `pwd`/fifo ]]; then
+  source fifo
+else
+  echo "missing file: fifo"
+  exit 1
+fi
+
+if [[ -f `pwd`/lilo ]]; then
+  source lilo
+else
+  echo "missing file: lilo"
+  exit 1
+fi
+
+if [[ -f `pwd`/sharedfuncs ]]; then
+  source sharedfuncs
+else
+  echo "missing file: sharedfuncs"
+  exit 1
+fi  
+
+if [[ -f `pwd`/setup ]]; then
+  source setup
+else
+  echo "missing file: setup"
+  exit 1
+fi
+
+# Check boot system for msdos or gpt/efi system
+check_boot_system
+
+# wired and/or wireless setup
+#setup_connection
+check_connection
+
+# setup keymap
+export LANG=$LOCALE_UTF8
+loadkeys $KEYMAP
+
+# setup mirror list
+configure_mirrorlist
+
+# multilib
+check_multilib
+
+# partition MBR, work with gpt/efi
+if [[ $UEFI -eq 0 ]]; then
+
+  if [ "$PARTITION_TABLE" == "msdos" ]; then
+    ## create msdos disk
+    parted -s $DEVICE mklabel msdos
+    ## first device is boot
+    parted -s $DEVICE mkpart primary ext2 1M $BOOT_SIZE
+    partprobe $DEVICE ## tell kernel we have a new partition table
+    parted -s $DEVICE set 1 boot on ## make partition active (bootable)
+    ## second device 
+    parted -s $DEVICE mkpart primary ext4 $BOOT_SIZE 100%
+    partprobe $DEVICE ## tell kernel we have a new partition table
+  fi
+elif [[ $UEFI -eq 1 ]]; then ## GPT
+  if [ "$PARTITION_TABLE" == "gpt" ]; then
+    make_partition $DEVICE 1MB `parted -m $DEVICE unit MB print free | grep 'free;' | sort -t : -k 4n -k 2n | tail -n 1 | awk -F':' '{print $2}'`
+    parted $DEVICE set $GPT_PARTITION_NUMBER bios_grub on
+    make_partition_auto $DEVICE `parted -m $DEVICE unit MB print free | grep 'free;' | sort -t : -k 4n -k 2n | tail -n 1 | awk -F':' '{print $2 " " $3}'`
+    partprobe $DEVICE
+  fi
+fi
+
+# for create separate home device
+if [ $SEPARATE_HOME == true ]; then
+  parted -s $HOME_DEVICE mklabel msdos
+  parted -s $HOME_DEVICE mkpart primary ext4 1M 100%
+  partprobe $HOME_DEVICE
+fi
+
+# create encrypt partition
+cryptsetup -v --cipher aes-xts-plain64 --key-size 512 --hash sha512 --iter-time 5000 --use-random luksFormat $ROOT_MOUNT_POINT
+
+# create encrypt partition home
+if [ $SEPARATE_HOME == true ]; then
+  cryptsetup -v --cipher aes-xts-plain64 --key-size 512 --hash sha512 --iter-time 5000 --use-random luksFormat $HOME_ROOT_MOUNT_POINT
+fi
+
+# open encrypt disk
+cryptsetup luksOpen $ROOT_MOUNT_POINT $CRYPT_NAME
+
+# open encrypt disk home
+if [ $SEPARATE_HOME == true ]; then
+  cryptsetup luksOpen $HOME_ROOT_MOUNT_POINT $HOME_CRYPT_NAME
+fi
+
+# set key file to home, if it is separated
+if [ $SEPARATE_HOME == true ]; then
+  if [ $KEYFILE == true ]; then
+    echo "create ${KEYFILE_NAME}"
+    dd bs=1024 count=4 if=/dev/urandom of=$KEYFILE_NAME iflag=fullblock
+    chmod 0400 $KEYFILE_NAME # only root can read
+    echo "set ${KEYFILE_NAME} to ${HOME_ROOT_MOUNT_POINT}"
+    cryptsetup luksAddKey $HOME_ROOT_MOUNT_POINT $KEYFILE_NAME
+  fi
+fi
+
+# create lvm for /"root", swap and home
+if [ $SEPARATE_HOME == false ]; then
+  # system and home
+  pvcreate /dev/mapper/$CRYPT_NAME
+  vgcreate $VG_CREATE_NAME /dev/mapper/$CRYPT_NAME
+  lvcreate -L $ROOT_SIZE -n root $VG_CREATE_NAME
+  lvcreate -L $SWAP_SIZE -n swap $VG_CREATE_NAME
+    lvcreate -l $HOME_SIZE -n home $VG_CREATE_NAME
+else # $SEPARATE_HOME == true
+  # system
+  pvcreate /dev/mapper/$CRYPT_NAME
+  vgcreate $VG_CREATE_NAME /dev/mapper/$CRYPT_NAME
+  lvcreate -L $SWAP_SIZE -n swap $VG_CREATE_NAME
+    lvcreate -l $HOME_SIZE -n root $VG_CREATE_NAME
+
+    # home
+  pvcreate /dev/mapper/$HOME_CRYPT_NAME
+  vgcreate $HOME_VG_CREATE_NAME /dev/mapper/$HOME_CRYPT_NAME
+  lvcreate -l $HOME_SIZE -n home $HOME_VG_CREATE_NAME
+fi
+
+# LVM names
+ROOT="${VG_CREATE_NAME}-root"
+SWAP="${VG_CREATE_NAME}-swap"
+if [ $SEPARATE_HOME == true ]; then
+  HOME="${HOME_VG_CREATE_NAME}-home"
+else
+  HOME="${VG_CREATE_NAME}-home"
+fi
+
+# formatting partition and swap
+mkfs.ext4 /dev/mapper/$ROOT
+mkswap /dev/mapper/$SWAP
+mkfs.ext4 /dev/mapper/$HOME
+
+# formatting boot
+if [[ $UEFI -eq 0 ]]; then
+  dd if=/dev/zero of=$BOOT_MOUNT_POINT bs=4096 count=1024 && sync # 1M
+  mkfs.ext2 $BOOT_MOUNT_POINT
+fi
+
+# mounting root
+mount /dev/mapper/$ROOT $MOUNT_POINT
+
+# install all necessary base package
+pacstrap $MOUNT_POINT base base-devel dialog wpa_supplicant
+[[ $UEFI -eq 1 ]] && pacstrap ${MOUNT_POINT} efibootmgr dosfstools
+
+# mount boot, home and swap
+mount $BOOT_MOUNT_POINT $MOUNT_POINT/boot
+swapon /dev/mapper/$SWAP
+mount /dev/mapper/$HOME $MOUNT_POINT/home
+
+# need for UEFI install
+if [[ $UEFI -eq 1 ]]; then
+  arch_chroot "pacman -Syu refind-install --noconfirm" # ???
+  arch_chroot "refind-install" # ???
+fi
+
+# generate fstab based on mounted devices
+if [[ $INSTALL_ON_PENDRIVE == true ]]; then
+  genfstab -pU $MOUNT_POINT >> $MOUNT_POINT/etc/fstab
+elif [[ $UEFI -eq 0 ]]; then
+  genfstab -pU $MOUNT_POINT >> $MOUNT_POINT/etc/fstab # not use -U, is for UUID
+else
+  genfstab -t PARTUUID -p $MOUNT_POINT >> $MOUNT_POINT/etc/fstab
+fi
+
+# hostname
+echo "$HOST_NAME" > ${MOUNT_POINT}/etc/hostname
+
+# hosts file
+arch_chroot "sed -i '/127.0.0.1/s/$/ '${HOST_NAME}'/' /etc/hosts"
+arch_chroot "sed -i '/::1/s/$/ '${HOST_NAME}'/' /etc/hosts"
+
+# modify hostname base on samba config
+if [ $INSTALL_SAMBA == true ]; then
+  if [ $AUTHENTICATE_ON_SERVER == true ]; then
+    arch_chroot "sed -i -e '\$a'${DNS_IP}' '${NETBIOS_NAME}'.'${DNS_NAME}' '${NETBIOS_NAME}'' /etc/hosts"
+  fi
+fi
+
+# localization
+arch_chroot "locale-gen en_US en_US.UTF-8 pt_BR pt_BR.UTF-8"
+sed -i '/en_US/s/^#//' ${MOUNT_POINT}/etc/locale.gen
+sed -i '/pt_BR/s/^#//' ${MOUNT_POINT}/etc/locale.gen
+arch_chroot locale-gen
+arch_chroot "export LANG=${LOCALE_UTF8}"
+
+# timezone
+arch_chroot "ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime"
+if [ $LOCAL_TIME == true ]; then
+  arch_chroot "hwclock --systohc --localtime"
+else
+  arch_chroot "hwclock --systohc --utc"
+fi
+
+# install grub and prober (auto detect system)
+arch_chroot "pacman -Syu grub grub-bios os-prober parted --noconfirm"
+
+# setup grub default
+sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet"/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash video=vesa:off"/' ${MOUNT_POINT}/etc/default/grub
+
+if [[ $USE_UUID == false ]]; then
+  sed -i 's|GRUB_CMDLINE_LINUX=""|GRUB_CMDLINE_LINUX="cryptdevice='${ROOT_MOUNT_POINT}':'${VG_CREATE_NAME}'"|' ${MOUNT_POINT}/etc/default/grub
+else
+  CRYPT_DEVICE_UUID=$(blkid $ROOT_MOUNT_POINT -s UUID -o value)
+  sed -i 's|GRUB_CMDLINE_LINUX=""|GRUB_CMDLINE_LINUX="cryptdevice=/dev/disk/by-uuid/'${CRYPT_DEVICE_UUID}':'${VG_CREATE_NAME}'"|' ${MOUNT_POINT}/etc/default/grub
+
+fi
+
+#[[ $INSTALL_ON_PENDRIVE == false ]] && sed -i "/#GRUB_DISABLE_LINUX_UUID=true/s/^#//" ${MOUNT_POINT}/etc/default/grub
+echo "GRUB_DISABLE_SUBMENU=y" >> ${MOUNT_POINT}/etc/default/grub
+
+# setup mkinitcpio
+# HOOKS="base udev autodetect modconf block filesystems keyboard fsck"
+
+# https://wiki.archlinux.org/index.php/Installing_with_Fake_RAID
+if [[ $FAKE_RAID == true ]]; then
+  arch_chroot "pacman -S dmraid --noconfirm"
+  sed -i '/^MODULES/s/=""/="'${RAID_MODULES}'"/' ${MOUNT_POINT}/etc/mkinitcpio.conf
+  sed -i '/^HOOK/s/filesystems/dmraid filesystems/' ${MOUNT_POINT}/etc/mkinitcpio.conf
+fi
+
+sed -i '/^HOOK/s/filesystems/keymap encrypt lvm2 filesystems/' ${MOUNT_POINT}/etc/mkinitcpio.conf
+sed -i '/^HOOK/s/filesystems/filesystems shutdown/' ${MOUNT_POINT}/etc/mkinitcpio.conf
+
+if [ $INSTALL_ON_PENDRIVE == true ]; then
+  sed -i '/^HOOK/s/block //' ${MOUNT_POINT}/etc/mkinitcpio.conf
+  sed -i '/^HOOK/s/udev/udev block/' ${MOUNT_POINT}/etc/mkinitcpio.conf
+fi
+arch_chroot "pacman -S linux --noconfirm"
+arch_chroot "mkinitcpio -p linux"
+
+# install grub
+if [[ $UEFI -eq 1 ]]; then
+  arch_chroot "grub-install --target=x86_64-efi --efi-directory=${EFI_BOOT_MOUNT_POINT} --bootloader-id=arch_grub --recheck"
+else
+  if [ $INSTALL_ON_PENDRIVE == true ]; then
+    arch_chroot "grub-install --target=i386-pc --recheck '${MBR_MOUNT_POINT}' --force"
+  else
+    arch_chroot "grub-install --target=i386-pc --recheck '${MBR_MOUNT_POINT}'"
+  fi
+fi
+
+# setup grub
+arch_chroot "grub-mkconfig -o /boot/grub/grub.cfg"
+
+# change root password
+echo "root passwd"
+arch_chroot "passwd"
+
+# create user
+arch_chroot "useradd -m -g '${USER_GROUP}' -G '${USER_GROUP_EXTRA}' -s /bin/bash '${USER_NAME}'"
+echo "user passwd"
+arch_chroot "passwd '${USER_NAME}'"
+arch_chroot "cp /etc/skel/.bashrc /home/'${USER_NAME}'"
+
+# setup sudo user
+sed -i '/%wheel ALL=(ALL) ALL/s/^#//' ${MOUNT_POINT}/etc/sudoers
+sed -i '/%wheel ALL=(ALL) NOPASSWD: ALL/s/^#//' ${MOUNT_POINT}/etc/sudoers # needed for run script with user login
+
+# install xorg
+arch_chroot "pacman -S --noconfirm xorg-{xinit,utils,server,server-utils,xkill}"
+arch_chroot "pacman -S --noconfirm xf86-input-synaptics xf86-input-mouse xf86-input-keyboard xf86-input-wacom xf86-input-libinput"
+arch_chroot "pacman -S --noconfirm xorg-twm xorg-xclock xterm"
+arch_chroot "pacman -S --noconfirm mesa"
+package_install "gamin"
+
+# ADD KEYMAP TO THE NEW SETUP
+# https://wiki.archlinux.org/index.php/Keyboard_configuration_in_Xorg
+# https://wiki.archlinux.org/index.php/Keyboard_configuration_in_Xorg#Using_X_configuration_files
+# https://wiki.archlinux.org/index.php/Locale
+echo "KEYMAP=${KEYMAP}" >> ${MOUNT_POINT}/etc/vconsole.conf
+echo "CONSOLEMAP=8859-1_to_uni" >> ${MOUNT_POINT}/etc/vconsole.conf
+localectl set-locale LANG=${LOCALE_UTF8}
+localectl set-keymap ${KEYMAP}
+localectl set-x11-keymap ${X11KEYMAP}
+
+# for separete home
+if [ $SEPARATE_HOME == true ]; then
+  # externaldrive         UUID=2f9a8428-ac69-478a-88a2-4aa458565431        none    luks,timeout=180
+  #_TMP=$(blkid | grep '${HOME_ROOT_MOUNT_POINT}' | awk -F '=' '{print $2;}')
+  #HOME_UUID=${_TMP:1:-1} # take off forst and last char
+
+  HOME_UUID=$(blkid $HOME_ROOT_MOUNT_POINT -s UUID -o value)
+
+  if [ $KEYFILE == true ]; then
+    cp $KEYFILE_NAME $MOUNT_POINT$KEYFILE_NAME
+    echo "${HOME_VG_CREATE_NAME} UUID=${HOME_UUID} ${KEYFILE_NAME} luks,timeout=60" >> ${MOUNT_POINT}/etc/crypttab
+  else
+    echo "${HOME_VG_CREATE_NAME} UUID=${HOME_UUID} none luks,timeout=60" >> ${MOUNT_POINT}/etc/crypttab
+  fi
+
+fi
+
+# copy all files for new user
+cp -R /root/$GIT_ACCOUNT-* ${MOUNT_POINT}/home/${USER_NAME}
+arch_chroot "chown -R ${USER_NAME}:${USER_GROUP} /home/${USER_NAME}/${GIT_ACCOUNT}-*"
+
+# unmount everything
+umount /mnt/home
+umount /mnt/boot
+umount /mnt
+

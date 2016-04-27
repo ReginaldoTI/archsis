@@ -1,0 +1,138 @@
+#!/bin/bash
+
+# DO NOT USE - or _ in names <<< ATTENTION!!!
+
+#############################################
+# variables                                 #
+# change as your needs                      #
+# raid examples /dev/md126, md126p1/md126p2 #
+#############################################
+DEVICE="/dev/sda" # principal device
+MBR_MOUNT_POINT="/dev/sda" # where to install your MBR
+BOOT_MOUNT_POINT="/dev/sda1" # where your boot will be installed
+ROOT_MOUNT_POINT="/dev/sda2" # where your root will be installed
+BOOT_SIZE="256MB"
+ROOT_SIZE="15GB"
+SWAP_SIZE="4GB"
+HOME_SIZE="100%FREE"
+CRYPT_NAME="cryptsystem" # name of encrypt disk
+VG_CREATE_NAME="vgsystem"
+HOST_NAME="l4pt0p" # used by host file and samba
+MOUNT_POINT="/mnt" # used by chroot
+USER_NAME="luis" # user name
+EDITOR="nano" # used
+LOCALE_UTF8="en_US.UTF-8" # pt_BR.UTF8
+LOCALE="en_US" # or pt_BR
+ARCHI=`uname -m` # ARCHITECTURE
+LOCAL_TIME=true # set local time or network time
+GIT_ACCOUNT="luisantoniojr" # github account name
+USE_UUID=true # use uuid in grub and fstab
+
+WIRED=true
+WIRELESS=false
+
+#############################################
+# Use this option only for pendrive install #
+#############################################
+INSTALL_ON_PENDRIVE=false
+
+# "Australia" "Austria" "Belarus" "Belgium" "Brazil" "Bulgaria" "Canada" "Chile" "China" "Colombia" "Czech Republic" "Denmark" "Estonia" "Finland" "France" "Germany" "Greece" "Hungary" "India" "Ireland" "Israel" "Italy" "Japan" "Kazakhstan" "Korea" "Latvia" "Luxembourg" "Macedonia" "Netherlands" "New Caledonia" "New Zealand" "Norway" "Poland" "Portugal" "Romania" "Russian" "Serbia" "Singapore" "Slovakia" "South Africa" "Spain" "Sri Lanka" "Sweden" "Switzerland" "Taiwan" "Turkey" "Ukraine" "United Kingdom" "United States" "Uzbekistan" "Viet Nam")
+# OPTIONS ["AU" "AT" "BY" "BE" "BR" "BG" "CA" "CL" "CN" "CO" "CZ" "DK" "EE" "FI" "FR" "DE" "GR" "HU" "IN" "IE" "IL" "IT" "JP" "KZ" "KR" "LV" "LU" "MK" "NL" "NC" "NZ" "NO" "PL" "PT" "RO" "RU" "RS" "SG" "SK" "ZA" "ES" "LK" "SE" "CH" "TW" "TR" "UA" "GB" "US" "UZ" "VN"]
+CONTRY_CODE="BR"
+
+# OPTIONS [br-abnt | br-abnt2 | us | us-acentos]
+KEYMAP="br-abnt2"
+
+# OPTIONS [br | us]
+X11KEYMAP="br"
+
+# define setup install
+INSTALL_DOCKER=false # install docker
+INSTALL_VIRTUALBOX=true # install virtualbox
+INSTALL_CUPS=false # install cups / print
+
+############################################################### 
+# use only if you want your home directory separate from root #
+###############################################################
+SEPARATE_HOME=false # important
+#
+HOME_DEVICE="/dev/sdb"
+HOME_ROOT_MOUNT_POINT="/dev/sdb1"
+HOME_CRYPT_NAME="crypthome"
+HOME_VG_CREATE_NAME="vghome"
+KEYFILE=true # use keyfile, if not, you will need to insert twice passwords, one for each encrypted device
+KEYFILE_NAME="/root/home_key_file"
+
+################################
+# automatic ip, gatewy and dns #
+################################
+AUTOMATIC_IP=false # important
+#
+CONNECTION_NAME="unifemm" # for network manager name
+IP_ADDR="172.16.0.152"
+SUBMASK="255.255.240.0"
+CIDR="/20"
+GATEWAY="172.16.0.32"
+NAMESERVER="172.16.5.253" # can be blank
+DNS_SEARCH="campusunifemm.edu.br" # can be blank
+
+#########################
+# shared, install samba #
+#########################
+INSTALL_SAMBA=false # important
+#
+WORK_GROUP="CAMPUSUNIFEMM"
+USERSHARES_DIR="/var/lib/samba/usershare" # don't change this
+USERSHARES_GROUP="sambashare" # don't change this
+USERSHARES_PATH="/home/${USER_NAME}/Public" # don't change this
+SHARED_NAME="shared" # this folder will be create for share files with others users
+SHARED_COMMENT=$HOST_NAME # used by samba
+NETBIOS_NAME=$HOST_NAME # used by samba
+DNS_IP="172.16.5.253"
+DNS_NAME="campusunifemm.edu.br"
+REALM=$DNS_NAME # used by samba
+USER_DOMAIN="002108" # used by samba
+AUTHENTICATE_ON_DOMAIN=false # experimental
+
+#######################
+# intel rapid storage #
+# RAID 0              #
+#######################
+FAKE_RAID=false
+RAID_MODULES="raid0 dm_mod dm_mirror" # don't change this
+
+##########################################
+##########################################
+# DON'T change anything below this point #
+##########################################
+##########################################
+
+username=${USER_NAME}
+USER_GROUP="users" # group
+USER_GROUP_EXTRA="wheel,storage,power,network" # importante groups used by user
+
+# detect msdos/gpt|efi
+PARTITION_TABLE=$(parted $DEVICE print | grep "Partition Table" | awk '{print $3;}')
+if [ "$PARTITION_TABLE" == "gpt" ]; then
+  GPT_PARTITION_NUMBER="6" # BIOS_BOOT
+  BOOT_MOUNT_POINT="/dev/sda2" # EFI System
+  ROOT_MOUNT_POINT="/dev/sda7" # change root system
+  EFI_BOOT_MOUNT_POINT="/boot/efi"
+elif [[ "$PARTITION_TABLE" == "unknown" ]]; then
+  PARTITION_TABLE="msdos"
+fi
+
+if [ $SEPARATE_HOME == true ]; then
+  HOME_PARTITION_TABLE=$(parted $HOME_DEVICE print | grep "Partition Table" | awk '{print $3;}')
+fi
+
+# detecting connection
+WIRED_DEV=`ip link | grep "eno\|enp\|eth" | awk '{print $2}'| sed 's/://' | sed '1!d'`
+WIRELESS_DEV=`ip link | grep wlp | awk '{print $2}'| sed 's/://' | sed '1!d'`
+
+# setting wired or wireless connection, default will be what is informed in wired or wireless variable
+if [ ! -z $WIRED_DEV ] && [ $WIRED == true ]; then
+	CONNECTION_DEVICE=$WIRED_DEV
+elif [ ! -z $WIRELESS_DEV ] && [ $WIRELESS == true ]; then
+  CONNECTION_DEVICE=$WIRELESS_DEV
+fi
