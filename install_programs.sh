@@ -295,8 +295,11 @@ config_xinitrc "startxfce4"
 package_install "cinnamon"
 
 # display manager
-package_install gdm
-system_ctl enable gdm
+# package_install gdm
+# system_ctl enable gdm
+
+package_install lightdm lightdm-gtk-greeter
+system_ctl enable lightdm
 
 # Network Management and daemon
 package_install "networkmanager dnsmasq network-manager-applet networkmanager-openconnect networkmanager-openvpn networkmanager-pptp networkmanager-vpnc"
