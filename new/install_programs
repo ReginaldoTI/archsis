@@ -30,19 +30,6 @@ else
   exit 1
 fi
 
-aur_pkg_install(){
-  su - ${USER_NAME} -c "sudo -v"
-
-  for PKG in $1; do
-    curl -o ${PKG}.tar.gz https://aur.archlinux.org/cgit/aur.git/snapshot/${PKG}.tar.gz
-    tar zxvf ${PKG}.tar.gz
-    rm ${PKG}.tar.gz
-    cd ${PKG}
-    makepkg -csi --noconfirm
-    pacman -U ${PKG}.tar.xz
-  done
-}
-
 install_virtualbox(){
   #Make sure we are not a VirtualBox Guest
   VIRTUALBOX_GUEST=`dmidecode --type 1 | grep VirtualBox`
@@ -385,19 +372,6 @@ pacman -Syu
 if [ $AUTHENTICATE_ON_DOMAIN == true ]; then
   sudo net rpc join -U ${USER_DOMAIN}
 fi
-
-
-#######
-# aur #
-#######
-
-# aur_package_install "libgee06"
-# aur_package_install "gnome-encfs-manager" # libgee06 as dependency
-aur_pkg_install "dropbox"
-aur_pkg_install "sublime-text-dev"
-aur_pkg_install "atom-editor"
-# aur_package_install "visual-studio-code"
-
 
 ##############
 # [customize]#
