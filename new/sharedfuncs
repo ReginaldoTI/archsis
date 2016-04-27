@@ -18,6 +18,13 @@
 #-------------------------------------------------------------------------------
 # Run this script after your first boot with archlinux (as root)
 
+if [[ -f `pwd`/setup ]]; then
+  source setup
+else
+  echo "missing file: setup"
+  exit 1
+fi
+
 #GLOBAL VARIABLES {{{
   checklist=( 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 )
   # COLORS {{{
