@@ -31,12 +31,16 @@ else
 fi
 
 aur_pkg_install(){
-  curl -o ${PKG}.tar.gz https://aur.archlinux.org/cgit/aur.git/snapshot/${PKG}.tar.gz
-  tar zxvf ${PKG}.tar.gz
-  rm ${PKG}.tar.gz
-  cd ${PKG}
-  makepkg -csi --noconfirm
-  pacman -U ${PKG}.tar.xz
+  su - ${USER_NAME} -c "sudo -v"
+
+  for PKG in $1; do
+    curl -o ${PKG}.tar.gz https://aur.archlinux.org/cgit/aur.git/snapshot/${PKG}.tar.gz
+    tar zxvf ${PKG}.tar.gz
+    rm ${PKG}.tar.gz
+    cd ${PKG}
+    makepkg -csi --noconfirm
+    pacman -U ${PKG}.tar.xz
+  done
 }
 
 install_virtualbox(){
