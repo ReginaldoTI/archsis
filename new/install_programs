@@ -143,6 +143,8 @@ localectl set-locale LANG=${LOCALE_UTF8}
 localectl set-keymap ${KEYMAP}
 localectl set-x11-keymap ${X11KEYMAP}
 
+package_install "linux-headers"
+
 # wired and wireless
 # setup_connection
 check_connection
