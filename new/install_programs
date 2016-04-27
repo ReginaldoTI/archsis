@@ -30,6 +30,15 @@ else
   exit 1
 fi
 
+aur_pkg_install(){
+  curl -o ${PKG}.tar.gz https://aur.archlinux.org/cgit/aur.git/snapshot/${PKG}.tar.gz
+  tar zxvf ${PKG}.tar.gz
+  rm ${PKG}.tar.gz
+  cd ${PKG}
+  makepkg -csi --noconfirm
+  pacman -U ${PKG}.tar.xz
+}
+
 install_virtualbox(){
   #Make sure we are not a VirtualBox Guest
   VIRTUALBOX_GUEST=`dmidecode --type 1 | grep VirtualBox`
@@ -355,14 +364,6 @@ if [ $INSTALL_DOCKER == true ]; then
   system_ctl start docker
 fi
 
-# aur
-# aur_package_install "libgee06"
-# aur_package_install "gnome-encfs-manager" # libgee06 as dependency
-aur_package_install "dropbox"
-aur_package_install "sublime-text-dev"
-aur_package_install "atom-editor"
-# aur_package_install "visual-studio-code"
-
 # install all video drivers for run on any desktop/laptop
 if [[ $INSTALL_ON_PENDRIVE == true ]]; then
   package_install "xf86-video-amdgpu xf86-video-ati xf86-video-intel xf86-video-nouveau"
@@ -380,6 +381,19 @@ pacman -Syu
 if [ $AUTHENTICATE_ON_DOMAIN == true ]; then
   sudo net rpc join -U ${USER_DOMAIN}
 fi
+
+
+#######
+# aur #
+#######
+
+# aur_package_install "libgee06"
+# aur_package_install "gnome-encfs-manager" # libgee06 as dependency
+aur_pkg_install "dropbox"
+aur_pkg_install "sublime-text-dev"
+aur_pkg_install "atom-editor"
+# aur_package_install "visual-studio-code"
+
 
 ##############
 # [customize]#
