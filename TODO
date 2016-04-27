@@ -32,3 +32,8 @@ To enable automatic login with GDM, add the following to /etc/gdm/custom.conf (r
 AutomaticLogin=username
 AutomaticLoginEnable=True
 
+
+# prompt color
+
+~./bashrc
+PS1='\[\e[0;31m\]\u\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \[\e[0;31m\]\$ \[\e[m\]\[\e[0;32m\]'

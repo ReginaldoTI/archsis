@@ -161,7 +161,7 @@ install_virtualbox(){
   #Make sure we are not a VirtualBox Guest
   VIRTUALBOX_GUEST=`dmidecode --type 1 | grep VirtualBox`
   if [[ -z ${VIRTUALBOX_GUEST} ]]; then
-    package_install "virtualbox virtualbox-host-modules virtualbox-guest-iso"
+    package_install "virtualbox virtualbox-host-dkms virtualbox-guest-iso linux-headers"
     # aur_package_install "virtualbox-ext-oracle"
     add_user_to_group ${USER_NAME} vboxusers
     add_module "vboxdrv vboxnetflt vboxnetadp" "virtualbox-host"
@@ -478,10 +478,10 @@ if [ $INSTALL_DOCKER == true ]; then
 fi
 
 # aur
-# aur_package_install "libgee06"
-# aur_package_install "gnome-encfs-manager" # libgee06 as dependency
-# aur_package_install "dropbox"
-# aur_package_install "sublime-text-dev"
+aur_package_install "libgee06"
+aur_package_install "gnome-encfs-manager" # libgee06 as dependency
+aur_package_install "dropbox"
+aur_package_install "sublime-text-dev"
 # aur_package_install "atom-editor"
 # aur_package_install "visual-studio-code"
 

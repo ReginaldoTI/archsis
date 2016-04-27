@@ -12,12 +12,12 @@ MBR_MOUNT_POINT="/dev/sda" # where to install your MBR
 BOOT_MOUNT_POINT="/dev/sda1" # where your boot will be installed
 ROOT_MOUNT_POINT="/dev/sda2" # where your root will be installed
 BOOT_SIZE="256MB"
-ROOT_SIZE="25GB"
-SWAP_SIZE="8GB"
+ROOT_SIZE="15GB"
+SWAP_SIZE="4GB"
 HOME_SIZE="100%FREE"
 CRYPT_NAME="cryptsystem" # name of encrypt disk
 VG_CREATE_NAME="vgsystem"
-HOST_NAME="REIT-INFO6x" # used by host file and samba
+HOST_NAME="l4pt0p" # used by host file and samba
 MOUNT_POINT="/mnt" # used by chroot
 USER_NAME="luis" # user name
 EDITOR="nano" # used
@@ -28,6 +28,9 @@ LOCAL_TIME=true # set local time or network time
 GIT_ACCOUNT="luisantoniojr" # github account name
 USE_UUID=true # use uuid in grub and fstab
 
+WIRED=true
+WIRELESS=false
+
 #############################################
 # Use this option only for pendrive install #
 #############################################
@@ -37,7 +40,7 @@ INSTALL_ON_PENDRIVE=false
 # OPTIONS ["AU" "AT" "BY" "BE" "BR" "BG" "CA" "CL" "CN" "CO" "CZ" "DK" "EE" "FI" "FR" "DE" "GR" "HU" "IN" "IE" "IL" "IT" "JP" "KZ" "KR" "LV" "LU" "MK" "NL" "NC" "NZ" "NO" "PL" "PT" "RO" "RU" "RS" "SG" "SK" "ZA" "ES" "LK" "SE" "CH" "TW" "TR" "UA" "GB" "US" "UZ" "VN"]
 CONTRY_CODE="BR"
 
-# OPTIONS [br-abnt | us | us-acentos]
+# OPTIONS [br-abnt | br-abnt2 | us | us-acentos]
 KEYMAP="br-abnt2"
 
 # OPTIONS [br | us]
@@ -45,8 +48,8 @@ X11KEYMAP="br"
 
 # define setup install
 INSTALL_DOCKER=false # install docker
-INSTALL_VIRTUALBOX=false # install virtualbox
-INSTALL_CUPS=true # install cups / print
+INSTALL_VIRTUALBOX=true # install virtualbox
+INSTALL_CUPS=false # install cups / print
 
 ############################################################### 
 # use only if you want your home directory separate from root #
@@ -76,7 +79,7 @@ DNS_SEARCH="campusunifemm.edu.br" # can be blank
 #########################
 # shared, install samba #
 #########################
-INSTALL_SAMBA=true # important
+INSTALL_SAMBA=false # important
 #
 WORK_GROUP="CAMPUSUNIFEMM"
 USERSHARES_DIR="/var/lib/samba/usershare" # don't change this
@@ -121,14 +124,9 @@ fi
 WIRED_DEV=`ip link | grep "eno\|enp\|eth" | awk '{print $2}'| sed 's/://' | sed '1!d'`
 WIRELESS_DEV=`ip link | grep wlp | awk '{print $2}'| sed 's/://' | sed '1!d'`
 
-# if you have wired and wireless connection, default will be wired
-if [ ! -z $WIRED_DEV ]; then
+# setting wired or wireless connection, default will be what is informed in wired or wireless variable
+if [ ! -z $WIRED_DEV ] && [ $WIRED == true ]; then
 	CONNECTION_DEVICE=$WIRED_DEV
-elif [ ! -z $WIRELESS_DEV ]; then
-  CONNECTION_DEVICE=$WIRELESS_DEV
-fi
-
-# setting default
-if [ ! -z $WIRED_DEV ] && [ ! -z $WIRELESS_DEV ]; then
+elif [ ! -z $WIRELESS_DEV ] && [ $WIRELESS == true ]; then
   CONNECTION_DEVICE=$WIRELESS_DEV
 fi
