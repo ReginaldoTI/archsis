@@ -353,7 +353,7 @@ username=$USER_NAME
     echo -e "${BRed}$1${Reset}\n" | fold -sw $(( $T_COLS - 1 ))
   } #}}}
   start_module() { #{{{
-    modprobe $1
+    modprobe -a $1
   } #}}}
   add_module() { #{{{
     for module in $1; do

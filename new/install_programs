@@ -37,8 +37,8 @@ install_virtualbox(){
     package_install "virtualbox virtualbox-host-dkms virtualbox-guest-iso linux-headers"
     # aur_package_install "virtualbox-ext-oracle"
     add_user_to_group ${USER_NAME} vboxusers
-    add_module "vboxdrv vboxnetflt vboxnetadp" "virtualbox-host"
-    modprobe vboxdrv vboxnetflt vboxnetadp
+    add_module "vboxdrv vboxnetadp vboxnetflt vboxpci" "virtualbox-host"
+    modprobe vboxdrv vboxnetflt vboxnetadp vboxpci
   else
     cecho " ${BBlue}[${Reset}${Bold}!${BBlue}]${Reset} VirtualBox was not installed as we are a VirtualBox guest."
   fi
@@ -157,22 +157,19 @@ install_video_cards
 print_title "XFCE - https://wiki.archlinux.org/index.php/Xfce"
 print_info "Xfce is a free software desktop environment for Unix and Unix-like platforms, such as Linux, Solaris, and BSD. It aims to be fast and lightweight, while still being visually appealing and easy to use."
 package_install "xfce4 xfce4-goodies" # xarchiver mupdf"
-# config xinitrc
-config_xinitrc "startxfce4"
-#pause_function
-#install_display_manager
-# install_themes "XFCE"
-#}}}
 
 # install cinnamon
 package_install "cinnamon"
 
-# display manager
-# package_install gdm
-# system_ctl enable gdm
+# config xinitrc
+config_xinitrc "startxfce4"
 
-package_install lightdm lightdm-gtk-greeter
-system_ctl enable lightdm
+# display manager
+package_install gdm
+system_ctl enable gdm
+
+# package_install lightdm lightdm-gtk-greeter
+# system_ctl enable lightdm
 
 # Network Management and daemon
 package_install "networkmanager dnsmasq network-manager-applet networkmanager-openconnect networkmanager-openvpn networkmanager-pptp networkmanager-vpnc"
