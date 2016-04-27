@@ -253,8 +253,8 @@ fi
 arch_chroot "grub-mkconfig -o /boot/grub/grub.cfg"
 
 # change root password
-echo "root passwd"
-arch_chroot "passwd"
+# echo "root passwd"
+# arch_chroot "passwd"
 
 # create user
 arch_chroot "useradd -m -g '${USER_GROUP}' -G '${USER_GROUP_EXTRA}' -s /bin/bash '${USER_NAME}'"

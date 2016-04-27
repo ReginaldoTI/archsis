@@ -9,7 +9,6 @@ else
   exit 1
 fi
 
-
 install_virtualbox(){
   #Make sure we are not a VirtualBox Guest
   VIRTUALBOX_GUEST=`dmidecode --type 1 | grep VirtualBox`

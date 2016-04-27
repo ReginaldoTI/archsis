@@ -25,6 +25,8 @@ else
   exit 1
 fi
 
+username=$USER_NAME
+
 #GLOBAL VARIABLES {{{
   checklist=( 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 )
   # COLORS {{{
