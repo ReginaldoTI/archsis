@@ -34,7 +34,7 @@ install_virtualbox(){
   #Make sure we are not a VirtualBox Guest
   VIRTUALBOX_GUEST=`dmidecode --type 1 | grep VirtualBox`
   if [[ -z ${VIRTUALBOX_GUEST} ]]; then
-    package_install "virtualbox virtualbox-host-dkms virtualbox-guest-iso linux-headers"
+    package_install "virtualbox virtualbox-host-dkms virtualbox-guest-iso linux-headers qt4"
     # aur_package_install "virtualbox-ext-oracle"
     add_user_to_group ${USER_NAME} vboxusers
     add_module "vboxdrv vboxnetadp vboxnetflt vboxpci" "virtualbox-host"
