@@ -4,7 +4,7 @@ aur_pkg_install(){
 
   PWD_DIR=`pwd`
 
-  su - ${USER_NAME} -c "sudo -v"
+  # su - ${USER_NAME} -c "sudo -v"
 
   for PKG in $1; do
     curl -o ${PKG}.tar.gz https://aur.archlinux.org/cgit/aur.git/snapshot/${PKG}.tar.gz
@@ -12,7 +12,7 @@ aur_pkg_install(){
     rm ${PKG}.tar.gz
     cd ${PKG}
     makepkg -csi --noconfirm
-    pacman -U ${PKG}.tar.xz
+    su - ${USER} -c "pacman -U ${PKG}.tar.xz"
     cd ${PWD_DIR}
   done
 }
