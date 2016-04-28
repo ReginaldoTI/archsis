@@ -167,11 +167,11 @@ package_install "cinnamon"
 config_xinitrc "startxfce4"
 
 # display manager
-# package_install gdm
-# system_ctl enable gdm
+package_install gdm
+system_ctl enable gdm
 
-package_install lightdm lightdm-gtk-greeter
-system_ctl enable lightdm
+# package_install lightdm lightdm-gtk-greeter
+# system_ctl enable lightdm
 
 # Network Management and daemon
 package_install "networkmanager dnsmasq network-manager-applet networkmanager-openconnect networkmanager-openvpn networkmanager-pptp networkmanager-vpnc"
@@ -262,7 +262,7 @@ package_install "filezilla"
 package_install "firefox firefox-i18n-$LOCALE_FF firefox-adblock-plus flashplugin"
 package_install "thunderbird thunderbird-i18n-$LOCALE_TB"
 package_install "chromium"
-# package_install "opera"
+package_install "opera"
 package_install "libreoffice-fresh libreoffice-fresh-$LOCALE_LO unoconv"
 package_install "inkscape python2-numpy python-lxml"
 package_install "gimp"
