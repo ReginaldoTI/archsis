@@ -12,7 +12,7 @@ aur_pkg_install(){
     rm ${PKG}.tar.gz
     cd ${PKG}
     makepkg -csi --noconfirm
-    su - ${USER} -c "pacman -U ${PKG}.tar.xz"
+    su - ${USER} -c "pacman -U ${PKG}.tar.xz --noconfirm"
     cd ${PWD_DIR}
   done
 }
