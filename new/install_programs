@@ -170,6 +170,9 @@ config_xinitrc "startxfce4"
 package_install gdm
 system_ctl enable gdm
 
+# enable autologin
+sed -i -e '/\[daemon\]/a\\nAutomaticLogin='${USER_NAME}'\nAutomaticLoginEnable=True\n' /etc/gdm/custom.conf
+
 # package_install lightdm lightdm-gtk-greeter
 # system_ctl enable lightdm
 
