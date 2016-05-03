@@ -21,9 +21,12 @@ aur_pkg_install(){
 # aur #
 #######
 
+aur_pkg_install "dropbox"
+aur_pkg_install "google-chrome"
+aur_pkg_install "notes"
+
+# aur_pkg_install "atom-editor"
+# aur_pkg_install "sublime-text-dev"
+# aur_package_install "visual-studio-code"
 # aur_package_install "libgee06"
 # aur_package_install "gnome-encfs-manager" # libgee06 as dependency
-aur_pkg_install "dropbox"
-aur_pkg_install "sublime-text-dev"
-aur_pkg_install "atom-editor"
-# aur_package_install "visual-studio-code"
