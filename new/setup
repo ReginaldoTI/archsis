@@ -31,6 +31,8 @@ USE_UUID=true # use uuid in grub and fstab
 WIRED=true
 WIRELESS=false
 
+AUTOLOGIN=true
+
 #############################################
 # Use this option only for pendrive install #
 #############################################

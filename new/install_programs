@@ -171,7 +171,9 @@ package_install gdm
 system_ctl enable gdm
 
 # enable autologin
-sed -i -e '/\[daemon\]/a\\nAutomaticLogin='${USER_NAME}'\nAutomaticLoginEnable=True\n' /etc/gdm/custom.conf
+if [ $AUTOLOGIN == true ]; then
+  sed -i -e '/\[daemon\]/a\\nAutomaticLogin='${USER_NAME}'\nAutomaticLoginEnable=True\n' /etc/gdm/custom.conf
+fi
 
 # package_install lightdm lightdm-gtk-greeter
 # system_ctl enable lightdm
