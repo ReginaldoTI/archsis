@@ -381,6 +381,11 @@ fi
 ##############
 # [customize]#
 ##############
+
+# xdg-mime query default inode/directory
+# ls /usr/share/applications
+xdg-mime default Thunar.desktop inode/directory # turn Thurnar default for open directories
+
 # List the channels:
 # xfconf-query -l
 # List all of the properties and values of a channel:
