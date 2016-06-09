@@ -1,0 +1,354 @@
+#!/bin/bash
+
+# check if all files are there
+
+if [[ -f `pwd`/fifo ]]; then
+  source fifo
+else
+  echo "missing file: fifo"
+  exit 1
+fi
+
+if [[ -f `pwd`/lilo ]]; then
+  source lilo
+else
+  echo "missing file: lilo"
+  exit 1
+fi
+
+if [[ -f `pwd`/sharedfuncs ]]; then
+  source sharedfuncs
+else
+  echo "missing file: sharedfuncs"
+  exit 1
+fi  
+
+if [[ -f `pwd`/setup ]]; then
+  source setup
+else
+  echo "missing file: setup"
+  exit 1
+fi
+
+install_virtualbox(){
+  #Make sure we are not a VirtualBox Guest
+  VIRTUALBOX_GUEST=`dmidecode --type 1 | grep VirtualBox`
+  if [[ -z ${VIRTUALBOX_GUEST} ]]; then
+    package_install "virtualbox virtualbox-host-dkms virtualbox-guest-iso linux-headers qt4"
+    # aur_package_install "virtualbox-ext-oracle"
+    add_user_to_group ${USER_NAME} vboxusers
+    add_module "vboxdrv vboxnetadp vboxnetflt vboxpci" "virtualbox-host"
+    modprobe vboxdrv vboxnetflt vboxnetadp vboxpci
+  else
+    cecho " ${BBlue}[${Reset}${Bold}!${BBlue}]${Reset} VirtualBox was not installed as we are a VirtualBox guest."
+  fi
+}
+
+## https://wiki.samba.org/index.php/Samba_&_Active_Directory#Setting_Up_Kerberos
+#SAMBA {{{
+install_samba(){
+  print_title "SAMBA - https://wiki.archlinux.org/index.php/Samba"
+  print_info "Samba is a re-implementation of the SMB/CIFS networking protocol, it facilitates file and printer sharing among Linux and Windows systems as an alternative to NFS."
+  #read_input_text "Install Samba" $SAMBA
+  #if [[ $OPTION == y ]]; then
+    package_install "samba smbnetfs"
+    [[ ! -f /etc/samba/smb.conf ]] && cp /etc/samba/smb.conf.default /etc/samba/smb.conf
+    local CONFIG_SAMBA=`cat /etc/samba/smb.conf | grep usershare`
+    if [[ -z $CONFIG_SAMBA ]]; then
+      # configure usershare
+      # export USERSHARES_DIR="/var/lib/samba/usershare"
+      # export USERSHARES_GROUP="sambashare"
+      export USERSHARES_DIR
+      export USERSHARES_GROUP
+      mkdir -p ${USERSHARES_DIR} # used by net usershare add <>...
+      groupadd ${USERSHARES_GROUP}
+      chown root:${USERSHARES_GROUP} ${USERSHARES_DIR}
+      chmod 01770 ${USERSHARES_DIR}
+
+      mkdir -p ${USERSHARES_PATH} # used by smb.conf
+      chown ${USER_NAME}:${USER_GROUP} ${USERSHARES_PATH} # used by smb.conf
+
+      # smbd -i - invalid permissions on directory '/var/cache/samba/msg': has 0700 should be 0755
+      chmod 0755 /var/cache/samba/msg
+
+      # delete desnecessary lines
+      sed -i "\|printcap name = \/etc\/printcap|d" /etc/samba/smb.conf
+      sed -i "\|load printers = yes|d" /etc/samba/smb.conf
+
+      sed -i "\|\[homes\]|d" /etc/samba/smb.conf
+      sed -i "\|comment = Home Directories|d" /etc/samba/smb.conf
+      sed -i "\|browseable = no|d" /etc/samba/smb.conf
+      sed -i "\|writable = yes|d" /etc/samba/smb.conf
+
+      sed -i "\|\[printers\]|d" /etc/samba/smb.conf
+      sed -i "\|comment = All Printers|d" /etc/samba/smb.conf
+      sed -i "\|path = \/var\/spool\/samba|d" /etc/samba/smb.conf
+      sed -i "\|browseable = no|d" /etc/samba/smb.conf
+      sed -i "\|guest ok = no|d" /etc/samba/smb.conf
+      sed -i "\|writable = no|d" /etc/samba/smb.conf
+      sed -i "\|printable = yes|d" /etc/samba/smb.conf
+
+      sed -i "s|Samba Server|${HOST_NAME}|" /etc/samba/smb.conf # %h
+
+      sed -i 's|; name resolve order = wins lmhosts bcast| name resolve order = bcast lmhosts host wins|'
+
+      sed -i 's|workgroup = MYGROUP|workgroup = '${WORK_GROUP}'\n|' /etc/samba/smb.conf
+      sed -i -e '/\[global\]/a\\n   usershare path = /var/lib/samba/usershare\n   usershare max shares = 100\n   usershare allow guests = yes\n   usershare owner only = False\n   netbios name = '${NETBIOS_NAME}'\n' /etc/samba/smb.conf
+      sed -i -e '/\[global\]/a\\n   socket options = IPTOS_LOWDELAY TCP_NODELAY SO_KEEPALIVE\n   write cache size = 2097152\n   use sendfile = yes\n' /etc/samba/smb.conf
+      if [ $AUTHENTICATE_ON_DOMAIN == true ]; then # ???
+        sed -i -e '/\[global\]/a\\n   realm = '${REALM}'\n   winbind separator = \\\n   winbind use default domain = yes\n   winbind enum users  = yes\n   winbind enum groups = yes\n' /etc/samba/smb.conf
+        sed -i "s|security = user|security = ads|" /etc/samba/smb.conf
+        sed -i "s|;  encrypt passwords|encrypt passwords|" /etc/samba/smb.conf
+
+        sed -i 's/passwd:.*/& winbind/' /etc/nsswitch.conf
+        sed -i 's/group:.*/& winbind/' /etc/nsswitch.conf
+      fi
+
+      # share settings
+      sed -i -e "\$a\[${SHARED_NAME}\]\n  comment = ${SHARED_COMMENT}\n  path = ${USERSHARES_PATH}\n  writeable = yes\n  browseable = yes\n  guest ok = yes\n" /etc/samba/smb.conf
+
+      # echo '['${SHARED_NAME}']\n comment = '${SHARED_COMMENT}'\n path = '${SHARED_DIRECTORY}'\n writeable = yes\n browseable = yes\n guest ok = yes\n' >>  /etc/samba/smb.conf
+      usermod -a -G ${USERSHARES_GROUP} ${username}
+      sed -i '/user_allow_other/s/^#//' /etc/fuse.conf
+      modprobe fuse
+
+    fi
+    echo "Enter your new samba account password:"
+    pdbedit -a -u ${username}
+    while [[ $? -ne 0 ]]; do
+      pdbedit -a -u ${username}
+    done
+
+    # smbpasswd ???
+
+    # enable services
+    system_ctl enable smbd && system_ctl start smbd
+    system_ctl enable nmbd && system_ctl start nmbd
+    if [ $AUTHENTICATE_ON_DOMAIN == true ]; then
+      system_ctl enable winbindd && system_ctl start winbindd
+    fi
+
+    # smbclient -L localhost –U user1 ???
+}
+#}}}
+
+# install
+# setup keymap
+export LANG=${LOCALE_UTF8} # ???
+echo ${LANG}
+loadkeys ${KEYMAP}
+echo ${KEYMAP}
+
+localectl set-locale LANG=${LOCALE_UTF8}
+localectl set-keymap ${KEYMAP}
+localectl set-x11-keymap ${X11KEYMAP}
+
+# wired and wireless
+# setup_connection
+check_connection
+
+check_multilib
+
+language_selector
+
+package_install "linux-headers"
+
+install_video_cards
+
+#XFCE {{{
+package_install "gnome gnome-extra"
+
+# config xinitrc
+config_xinitrc "gnome-session"
+# exec gnome-session --session=gnome-classic
+config_xinitrc "gnome-session --session=gnome-classic"
+
+# display manager
+package_install gdm
+system_ctl enable gdm
+
+# enable autologin
+if [ $AUTOLOGIN == true ]; then
+  sed -i -e '/\[daemon\]/a\\nAutomaticLogin='${USER_NAME}'\nAutomaticLoginEnable=True\n' /etc/gdm/custom.conf
+fi
+
+# Network Management and daemon
+package_install "networkmanager dnsmasq network-manager-applet networkmanager-openconnect networkmanager-openvpn networkmanager-pptp networkmanager-vpnc"
+is_package_installed "ntp" && package_install "networkmanager-dispatcher-ntpd"
+system_ctl enable NetworkManager
+system_ctl start NetworkManager
+
+# create setup for network manager with nmcli
+# https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Networking_Guide/sec-Using_the_NetworkManager_Command_Line_Tool_nmcli.html
+# https://fedoraproject.org/wiki/Networking/CLI
+# http://cgit.freedesktop.org/NetworkManager/NetworkManager/plain/man/nmcli-examples.xml
+if [ $AUTOMATIC_IP == false ]; then
+  echo "Setup networking manager on: ${CONNECTION_DEVICE}"
+  nmcli con add type ethernet con-name $CONNECTION_NAME ifname $CONNECTION_DEVICE ip4 $IP_ADDR$CIDR gw4 $GATEWAY
+  nmcli con mod $CONNECTION_NAME ipv4.dns $NAMESERVER # +ipv4.dns to add
+  nmcli con mod $CONNECTION_NAME ipv4.dns-search $DNS_SEARCH
+  nmcli con up $CONNECTION_NAME ifname $CONNECTION_DEVICE
+fi
+
+echo "BASH TOOLS - https://wiki.archlinux.org/index.php/Bash"
+package_install "bc rsync mlocate bash-completion pkgstats"
+
+echo "NTPd - https://wiki.archlinux.org/index.php/NTPd"
+package_install "ntp"
+is_package_installed "ntp" && ntpd -u ntp:ntp
+
+echo "(UN)COMPRESS TOOLS - https://wiki.archlinux.org/index.php/P7zip"
+package_install "zip unzip unrar p7zip"
+
+echo "ALSA - https://wiki.archlinux.org/index.php/Alsa"
+package_install "alsa-utils alsa-plugins"
+package_install "lib32-alsa-plugins"
+
+echo "PULSEAUDIO - https://wiki.archlinux.org/index.php/Pulseaudio"
+package_install "pulseaudio pulseaudio-alsa pavucontrol"
+package_install "lib32-libpulse"
+
+echo "NTFS/FAT/exFAT - https://wiki.archlinux.org/index.php/File_Systems"
+package_install "ntfs-3g dosfstools exfat-utils fuse fuse-exfat autofs"
+is_package_installed "fuse" && add_module "fuse"
+
+echo "NFS - https://wiki.archlinux.org/index.php/Nfs"
+package_install  "nfs-utils"
+system_ctl mask nfs-blkmap.service # get out with warning boot message
+system_ctl enable rpcbind
+system_ctl enable nfs-client.target
+system_ctl enable remote-fs.target
+
+# Advanced Configuration and Power Interface (ACPI)
+echo "ACPID https://wiki.archlinux.org/index.php/Acpid"
+package_install "acpi acpid"
+system_ctl enable acpid
+
+# tools
+package_install "mc curl lynx wget terminator rdesktop gparted encfs"
+package_install "rsync grsync"
+
+# https://wiki.archlinux.org/index.php/Davfs
+package_install "davfs2"
+
+package_install "gedit gedit-plugins vte3"
+package_install "git gsfonts tk"
+package_install "meld"
+package_install "gvfs gvfs-smb gvfs-nfs smbclient sshfs" # gnome-vfs # cifs-utils
+package_install "gvfs-afc" #: removable media (e.g. optical disks, USB data sticks, and cameras)
+package_install "gvfs-mtp" #: phones and media players that require MTP
+#package_install "gvfs-gphoto2" #: automatically transfer content from many digital cameras
+
+package_install "cherrytree"
+
+# media player
+package_install "totem"
+package_install "parole"
+package_install "smplayer" # gui for mplayer
+package_install "audacious audacious-plugins"
+package_install "banshee"
+
+package_install "filezilla"
+package_install "firefox firefox-i18n-$LOCALE_FF firefox-adblock-plus flashplugin"
+package_install "thunderbird thunderbird-i18n-$LOCALE_TB"
+package_install "chromium"
+package_install "opera"
+package_install "libreoffice-fresh libreoffice-fresh-$LOCALE_LO unoconv"
+package_install "inkscape python2-numpy python-lxml"
+package_install "gimp"
+
+# sound programs
+package_install "audacity"
+package_install "soundconverter"
+
+package_install "easytag"
+package_install "handbrake"
+
+# https://www.archlinux.org/packages/community/x86_64/plank/
+
+# stream / codecs
+package_install "gst-libav gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly gst-plugins-base-libs"
+package_install "gstreamer0.10 gstreamer0.10-plugins"
+package_install "libbluray libquicktime libdvdread libdvdnav libdvdcss cdrdao"
+sudo -u ${USER_NAME} mkdir -p /home/${USER_NAME}/.config/aacs/ && cd /home/${USER_NAME}/.config/aacs/ && wget http://vlc-bluray.whoknowsmy.name/files/KEYDB.cfg
+
+# font
+package_install "ttf-droid ttf-dejavu"
+
+# cursor
+package_install "xcursor-themes"
+
+# theme
+package_install "numix-themes"
+
+# icons
+package_install "adwaita-icon-theme gnome-icon-theme gnome-icon-theme-extras gnome-icon-theme-symbolic hicolor-icon-theme"
+package_install "faenza-icon-theme faience-icon-theme"
+
+# spell checking [HUNSPELL]
+package_install "hunspell hunspell-$LOCALE_HS"
+
+# Hyphenation rules [HYPHEN]
+package_install "hyphen hyphen-$LOCALE_HP"
+
+# Thesaurus [LIBMYTHES MYTHES]
+# sudo pacman -S aspell aspell-en hunspell-en hyphen-en libmythes mythes-en
+package_install "libmythes mythes mythes-$LOCALE_MT"
+
+# 3G modem
+package_install "usbutils usb_modeswitch modemmanager"
+
+# clamav # freshclam
+package_install clamav
+cp /etc/clamav/clamd.conf.sample /etc/clamav/clamd.conf
+cp /etc/clamav/freshclam.conf.sample /etc/clamav/freshclam.conf
+sed -i '/Example/d' /etc/clamav/freshclam.conf
+sed -i '/Example/d' /etc/clamav/clamd.conf
+sed -i 's/#TCPSocket/TCPSocket/' /etc/clamav/clamd.conf
+sed -i '/DatabaseDirectory/s/^#//' /etc/clamav/clamd.conf
+sed -i '/DatabaseDirectory/s/^#//' /etc/clamav/freshclam.conf
+# clamd.service: PID file /run/clamav/clamd.pid not readable (yet?) after start: No such file or directory
+touch /run/clamav/clamd.pid
+# chown luis:users /var/lib/clamav & chmod 755 /var/lib/clamav ???
+system_ctl enable clamd
+system_ctl enable freshclamd
+
+# ssh
+package_install openssh
+system_ctl enable sshd
+
+if [ $INSTALL_VIRTUALBOX == true ]; then
+  install_virtualbox
+fi
+
+if [ $INSTALL_SAMBA == true ]; then
+  install_samba
+fi
+
+if [ $INSTALL_CUPS == true ]; then
+  install_cups
+fi
+
+if [ $INSTALL_DOCKER == true ]; then
+  package_install "docker"
+  gpasswd -a ${USER_NAME} docker
+  system_ctl enable docker
+  system_ctl start docker
+fi
+
+# install all video drivers for run on any desktop/laptop
+if [[ $INSTALL_ON_PENDRIVE == true ]]; then
+  package_install "xf86-video-amdgpu xf86-video-ati xf86-video-intel xf86-video-nouveau"
+fi
+
+# turn off, more secure
+sed -i '/%wheel ALL=(ALL) NOPASSWD: ALL/s/^/#/' /etc/sudoers
+
+rm -R /var/lib/pacman/sync
+pacman -Syu
+
+if [ $AUTHENTICATE_ON_DOMAIN == true ]; then
+  sudo net rpc join -U ${USER_DOMAIN}
+fi
+
+xdg-mime default org.gnome.Nautilus.desktop inode/directory # set nautilus as default on open directories
