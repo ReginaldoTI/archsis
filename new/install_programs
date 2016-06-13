@@ -155,16 +155,34 @@ package_install "linux-headers"
 
 install_video_cards
 
-#XFCE {{{
-print_title "XFCE - https://wiki.archlinux.org/index.php/Xfce"
-print_info "Xfce is a free software desktop environment for Unix and Unix-like platforms, such as Linux, Solaris, and BSD. It aims to be fast and lightweight, while still being visually appealing and easy to use."
-package_install "xfce4 xfce4-goodies" # xarchiver mupdf"
+# desktop managers
+if [ $XFCE == true ]; then
+  #XFCE {{{
+  print_title "XFCE - https://wiki.archlinux.org/index.php/Xfce"
+  print_info "Xfce is a free software desktop environment for Unix and Unix-like platforms, such as Linux, Solaris, and BSD. It aims to be fast and lightweight, while still being visually appealing and easy to use."
+  package_install "xfce4 xfce4-goodies" # xarchiver mupdf"
+fi
+
+if [ $GNOME == true ]; then
+  package_install "gnome"
+  package_install "bijiben brasero cheese devhelp evolution file-roller gedit gedit-code-assistance gitg gnome-calendar gnome-characters gnome-clocks gnome-code-assistance gnome-color-manager gnome-devel-docs gnome-documents gnome-getting-started-docs gnome-logs gnome-maps gnome-music gnome-nettool gnome-photos gnome-sound-recorder gnome-todo gnome-tweak-tool gnome-weather nautilus-sendto orca polari rygel seahorse vinagre"
+fi
 
 # install cinnamon
-package_install "cinnamon"
+if [ $CINNAMON == true ]; then
+  package_install "cinnamon"
+fi
 
 # config xinitrc
-config_xinitrc "startxfce4"
+if [ $XFCE == true ]; then
+  config_xinitrc "startxfce4"
+fi
+
+if [ $GNOME == true ]; then
+  config_xinitrc "gnome-session"
+  # exec gnome-session --session=gnome-classic
+  # config_xinitrc "gnome-session --session=gnome-classic"
+fi
 
 # display manager
 package_install gdm
@@ -207,8 +225,8 @@ echo "(UN)COMPRESS TOOLS - https://wiki.archlinux.org/index.php/P7zip"
 package_install "zip unzip unrar p7zip"
 
 echo "AVAHI - https://wiki.archlinux.org/index.php/Avahi"
-package_install "avahi nss-mdns"
-system_ctl enable avahi-daemon
+#package_install "avahi nss-mdns"
+#system_ctl enable avahi-daemon
 
 echo "ALSA - https://wiki.archlinux.org/index.php/Alsa"
 package_install "alsa-utils alsa-plugins"
@@ -243,9 +261,16 @@ package_install "gnome-disk-utility"
 # https://wiki.archlinux.org/index.php/Davfs
 package_install "davfs2"
 
-package_install "catfish"
+if [ $XFCE == true ]; then
+  package_install "catfish"
+fi
+
 package_install "gedit gedit-plugins vte3"
-package_install "xscreensaver"
+
+if [ $XFCE == true ]; then
+  package_install "xscreensaver"
+fi
+
 package_install "git gsfonts tk"
 package_install "meld"
 package_install "gvfs gvfs-smb gvfs-nfs smbclient sshfs" # gnome-vfs # cifs-utils
@@ -365,8 +390,10 @@ if [[ $INSTALL_ON_PENDRIVE == true ]]; then
   package_install "xf86-video-amdgpu xf86-video-ati xf86-video-intel xf86-video-nouveau"
 fi
 
-# Run thunar as deamon
-echo "thunar --daemon &" > /etc/xprofile
+if [ $XFCE == true ]; then
+  # Run thunar as deamon
+  echo "thunar --daemon &" > /etc/xprofile
+fi
 
 # turn off, more secure
 sed -i '/%wheel ALL=(ALL) NOPASSWD: ALL/s/^/#/' /etc/sudoers
@@ -378,34 +405,43 @@ if [ $AUTHENTICATE_ON_DOMAIN == true ]; then
   sudo net rpc join -U ${USER_DOMAIN}
 fi
 
-##############
-# [customize]#
-##############
+###################
+# [customize XFCE]#
+###################
 
-# xdg-mime query default inode/directory
-# ls /usr/share/applications
-xdg-mime default Thunar.desktop inode/directory # turn Thurnar default for open directories
+if [ $XFCE == true ]; then
 
-# List the channels:
-# xfconf-query -l
-# List all of the properties and values of a channel:
-# xfconf-query -c <CHANNEL> -lv
-# Create a new property:
-# xfconf-query -c <CHANNEL> -p <PROPERTY> -n -t <TYPE> -s <VALUE>
-# Change an existing property (same as previous but without the -n):
-# xfconf-query -c <CHANNEL> -p <PROPERTY> -s <VALUE>
+  # xdg-mime query default inode/directory
+  # ls /usr/share/applications
+  xdg-mime default Thunar.desktop inode/directory # turn Thurnar default for open directories
 
-# # Always uncheck save session for future logins
-# xfconf-query -c xfce4-session -p /general/SaveOnExit -n -t bool -s false
-# # change icon
-# xfconf-query -c xsettings -p /Net/IconThemeName -s Faenza-Ambiance
-# # settings -> windows manager -> style
-# xfconf-query -c xfwm4 -p /general/theme -s Numix
-# # settings -> appearance - style
-# xfconf-query -c xsettings -p /Net/ThemeName -s Numix
-# # change workspace numbers
-# xfconf-query -c xfwm4 -p /general/workspace_count -s 1
-# # change clock format
-# xfconf-query -c xfce4-panel -p /plugins/plugin-5/digital-format -s "%R%n<span size='x-small'>%d-%m %Y</span>"
+  # List the channels:
+  # xfconf-query -l
+  # List all of the properties and values of a channel:
+  # xfconf-query -c <CHANNEL> -lv
+  # Create a new property:
+  # xfconf-query -c <CHANNEL> -p <PROPERTY> -n -t <TYPE> -s <VALUE>
+  # Change an existing property (same as previous but without the -n):
+  # xfconf-query -c <CHANNEL> -p <PROPERTY> -s <VALUE>
 
-# reboot
+  # # Always uncheck save session for future logins
+  # xfconf-query -c xfce4-session -p /general/SaveOnExit -n -t bool -s false
+  # # change icon
+  # xfconf-query -c xsettings -p /Net/IconThemeName -s Faenza-Ambiance
+  # # settings -> windows manager -> style
+  # xfconf-query -c xfwm4 -p /general/theme -s Numix
+  # # settings -> appearance - style
+  # xfconf-query -c xsettings -p /Net/ThemeName -s Numix
+  # # change workspace numbers
+  # xfconf-query -c xfwm4 -p /general/workspace_count -s 1
+  # # change clock format
+  # xfconf-query -c xfce4-panel -p /plugins/plugin-5/digital-format -s "%R%n<span size='x-small'>%d-%m %Y</span>"
+fi
+
+#####################
+# [customize GNOME] #
+#####################
+
+if [ $GNOME == true ]; then
+  xdg-mime default org.gnome.Nautilus.desktop inode/directory # set nautilus as default on open directories
+fi

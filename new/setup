@@ -28,6 +28,11 @@ LOCAL_TIME=true # set local time or network time
 GIT_ACCOUNT="luisantoniojr" # github account name
 USE_UUID=true # use uuid in grub and fstab
 
+# do not install both desktop managers, you will have conflicts
+XFCE=false # install xfce and components
+GNOME=true # install gnome and components
+CINNAMON=false # install cinnamon
+
 WIRED=true
 WIRELESS=false
 
